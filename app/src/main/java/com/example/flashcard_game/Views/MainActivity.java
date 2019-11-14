@@ -1,8 +1,10 @@
-package com.example.flashcard_game;
+package com.example.flashcard_game.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.flashcard_game.R;
 
 public class MainActivity extends AppCompatActivity {
 
