@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.flashcard_game.Models.Games;
 import com.example.flashcard_game.Retrofit.IMyAPI;
 import com.example.flashcard_game.Retrofit.RetrofitClient;
+import com.example.flashcard_game.Views.ui.home.HomeFragment;
 
 import java.util.List;
 
@@ -18,45 +19,23 @@ import retrofit2.Retrofit;
 
 public class HomeViewModel extends ViewModel {
 
+    public List<Games> mGamelist;
 
-
-    private MutableLiveData<List<Games>> mGamelist;
+//    private MutableLiveData<List<Games>> mGamelist;
 
     public HomeViewModel() {
 
 
 
-        mGamelist = new MutableLiveData<>();
+//        mGamelist = new MutableLiveData<>();
 //        mGamelist.setValue();
     }
 
-    public LiveData<List<Games>> getGamelist() {
-        return mGamelist;
-    }
+//    public LiveData<List<Games>> getGamelist() {
+//        return mGamelist;
+//    }
 
 
-    public void fetchData(){
-        IMyAPI myAPI;
-        CompositeDisposable compositeDisposable= new CompositeDisposable();
-        Retrofit retrofit= RetrofitClient.getInstance();
-        myAPI= retrofit.create(IMyAPI.class);
 
-        compositeDisposable.add(myAPI.getGames()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Games>>() {
-                    @Override
-                    public void accept(List<Games> games) throws Exception {
-                        getData(games);
-                    }
-                })
-        );
 
-    }
-
-    public List<Games> getData(List<Games> games) {
-
-        return games;
-
-    }
 }

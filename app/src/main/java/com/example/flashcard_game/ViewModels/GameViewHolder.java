@@ -44,8 +44,8 @@ public class GameViewHolder extends RecyclerView.ViewHolder {
 
     public void bindto(Games currentGames){
 
-        txt_game_name.setText(currentGames.getGame_name());
-       txt_flashcard_count.setText(currentGames.getFlashcard_count());
+        txt_game_name.setText(currentGames.getName());
+       txt_flashcard_count.setText(currentGames.getFlashcard_count()+"");
         Glide.with(GameAdapter.context).load(currentGames.getThumbnail()).into(gameImage);
     }
 

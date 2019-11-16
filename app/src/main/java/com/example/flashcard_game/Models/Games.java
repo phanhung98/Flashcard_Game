@@ -2,17 +2,17 @@ package com.example.flashcard_game.Models;
 
 public class Games {
 
-    private String game_name;
+    private String name;
     private String thumbnail;
-    private int flashcard_count;
+    private int Flashcard_count;
 
 
-    public String getGame_name() {
-        return game_name;
+    public String getName() {
+        return name;
     }
 
-    public void setGame_name(String game_name) {
-        this.game_name = game_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getThumbnail() {
@@ -24,11 +24,10 @@ public class Games {
     }
 
     public int getFlashcard_count() {
-        return flashcard_count;
+        return Flashcard_count;
     }
 
     public void setFlashcard_count(int flashcard_count) {
-        this.flashcard_count = flashcard_count;
+        Flashcard_count = flashcard_count;
     }
-
 }
