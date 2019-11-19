@@ -1,4 +1,4 @@
-package com.ccvn.flashcard_game.Views.ui.listgame;
+package com.ccvn.flashcard_game.Views;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +22,6 @@ import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.Retrofit.ApiUtils;
 import com.ccvn.flashcard_game.Retrofit.getGameList;
 import com.ccvn.flashcard_game.ViewModels.Adapter.GameAdapter;
-import com.ccvn.flashcard_game.Views.GameActivitys.GameActivity;
-import com.ccvn.flashcard_game.Views.GameActivitys.GameDetail;
 
 import java.util.ArrayList;
 import java.util.List;

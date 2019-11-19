@@ -19,7 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.ImageView;
 
-public class Home extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     private ImageView userphoto;
 

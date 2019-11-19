@@ -12,10 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.ccvn.flashcard_game.Views.GameActivitys.GameDetail"></activity>
-        <activity android:name="com.ccvn.flashcard_game.Views.GameActivitys.GameActivity" />
+        <activity android:name="com.ccvn.flashcard_game.Views.GameDetail"></activity>
+        <activity android:name="com.ccvn.flashcard_game.Views.GameActivity" />
         <activity
-            android:name="com.ccvn.flashcard_game.Views.Home"
+            android:name="com.ccvn.flashcard_game.Views.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar">
 
