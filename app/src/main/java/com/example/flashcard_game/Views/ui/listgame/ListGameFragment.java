@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,11 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.flashcard_game.Models.Games;
 import com.example.flashcard_game.R;
 import com.example.flashcard_game.Retrofit.ApiUtils;
-import com.example.flashcard_game.Retrofit.IMyAPI;
+import com.example.flashcard_game.Retrofit.getGameList;
 import com.example.flashcard_game.ViewModels.Adapter.GameAdapter;
-import com.example.flashcard_game.Views.GameActivitys.Game1Activity;
-import com.example.flashcard_game.Views.GameActivitys.Game2Activity;
-import com.example.flashcard_game.Views.Home;
+import com.example.flashcard_game.Views.GameActivitys.GameActivity;
+import com.example.flashcard_game.Views.GameActivitys.GameDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @SuppressWarnings("ALL")
 public class ListGameFragment extends Fragment implements GameAdapter.OnGameListener {
-    IMyAPI iMyAPI;
+    getGameList getGameList;
 
     private RecyclerView recyclerView;
     private List<Games> list;
@@ -51,8 +49,8 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         list= new ArrayList<>();
-      // Init IMyAPI class
-        iMyAPI= ApiUtils.getAPIService();
+      // Init getGameList class
+        getGameList = ApiUtils.getAPIService();
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
@@ -65,7 +63,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     }
     // Fetch data form API.
     private void fetchdata(){
-        compositeDisposable.add(iMyAPI.getGames()
+        compositeDisposable.add(getGameList.getGames()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Games>>() {
@@ -101,11 +99,11 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     @Override
     public void onGameClick(int position) {
         if (position ==0){
-            Intent intent= new Intent(getActivity(), Game1Activity.class);
+            Intent intent= new Intent(getActivity(), GameActivity.class);
             startActivity(intent);
         }
         if (position ==1){
-            Intent intent= new Intent(getActivity(), Game2Activity.class);
+            Intent intent= new Intent(getActivity(), GameDetail.class);
             startActivity(intent);
         }
     }

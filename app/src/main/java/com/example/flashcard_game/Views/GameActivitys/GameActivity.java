@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.example.flashcard_game.R;
 
-public class Game2Activity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game2);
+        setContentView(R.layout.activity_game1);
     }
 }
