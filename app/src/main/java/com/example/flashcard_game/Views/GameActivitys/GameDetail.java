@@ -11,6 +11,6 @@ public class GameDetail extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game2);
+        setContentView(R.layout.activity_gamedetail);
     }
 }
