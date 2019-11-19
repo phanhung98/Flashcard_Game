@@ -1,4 +1,4 @@
-package com.example.flashcard_game.Views;
+package com.example.flashcard_game.Views.GameActivitys;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.example.flashcard_game.R;
 
-public class MainActivity extends AppCompatActivity {
+public class Game2Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_game2);
     }
 }

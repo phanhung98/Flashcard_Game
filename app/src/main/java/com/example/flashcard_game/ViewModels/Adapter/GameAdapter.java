@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,18 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.flashcard_game.Models.Games;
 import com.example.flashcard_game.R;
-import com.example.flashcard_game.ViewModels.GameViewHolder;
 
 import java.util.List;
 
-public class GameAdapter extends RecyclerView.Adapter<GameViewHolder> {
+public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
 
    public static Context context;
-    List<Games> gamelist;
+   public List<Games> gamelist;
+   private OnGameListener mOnGameListener;
 
-    public GameAdapter(Context context, List<Games> gamelist) {
+    public GameAdapter(Context context, List<Games> gamelist, OnGameListener onGameListener) {
         this.context = context;
         this.gamelist = gamelist;
+        this.mOnGameListener= onGameListener;
     }
 
     @NonNull
@@ -31,12 +34,14 @@ public class GameAdapter extends RecyclerView.Adapter<GameViewHolder> {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.game_items, parent,false);
 
-        return new GameViewHolder(view);
+        return new GameViewHolder(view, mOnGameListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
 
+//        holder.gameImage.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition_animation));
+//        holder.container.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition_animation));
 
         Games currentGame= gamelist.get(position);
         holder.bindto(currentGame);
@@ -47,4 +52,49 @@ public class GameAdapter extends RecyclerView.Adapter<GameViewHolder> {
     public int getItemCount() {
         return gamelist.size();
     }
+
+    public class GameViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+
+
+        public TextView txt_game_name;
+        public TextView txt_flashcard_count;
+        public ImageView gameImage;
+
+        OnGameListener onGameListener;
+
+//    public RelativeLayout container;
+
+        public GameViewHolder(@NonNull View itemView, GameAdapter.OnGameListener onGameListener) {
+            super(itemView);
+
+            txt_game_name=(TextView)itemView.findViewById(R.id.game_name);
+            txt_flashcard_count=(TextView)itemView.findViewById(R.id.flashcard_count);
+            gameImage=(ImageView) itemView.findViewById(R.id.gameImage);
+            this.onGameListener= onGameListener;
+//        container=(RelativeLayout) itemView.findViewById(R.id.container);
+            itemView.setOnClickListener(this);
+
+        }
+
+        public void bindto(Games currentGames){
+
+
+            txt_game_name.setText(currentGames.getName());
+//       txt_flashcard_count.setText("Consist: "+currentGames.getFlashcard_count()+ " Flashcard");
+            Glide.with(GameAdapter.context).load(currentGames.getThumbnail()).into(gameImage);
+        }
+
+
+        @Override
+        public void onClick(View v) {
+            onGameListener.onGameClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnGameListener{
+        void onGameClick(int position);
+    }
 }
+
+
