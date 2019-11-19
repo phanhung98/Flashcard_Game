@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.example.flashcard_game.Retrofit.IMyAPI;
 import com.example.flashcard_game.ViewModels.Adapter.GameAdapter;
 import com.example.flashcard_game.Views.GameActivitys.Game1Activity;
 import com.example.flashcard_game.Views.GameActivitys.Game2Activity;
+import com.example.flashcard_game.Views.Home;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,8 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
     private RecyclerView recyclerView;
     private List<Games> list;
+
+
 
     CompositeDisposable compositeDisposable= new CompositeDisposable();
 
@@ -80,6 +84,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         GameAdapter adapter= new GameAdapter(getContext(), games, this);
         recyclerView.setAdapter(adapter);
         runLayoutAnimation(recyclerView);
+
     }
     // load animation for item.
     private void runLayoutAnimation(final RecyclerView recyclerView){
@@ -97,7 +102,6 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     public void onGameClick(int position) {
         if (position ==0){
             Intent intent= new Intent(getActivity(), Game1Activity.class);
-            intent.putExtra("Name", list.get(position).getName());
             startActivity(intent);
         }
         if (position ==1){

@@ -8,10 +8,6 @@ import androidx.lifecycle.AndroidViewModel;
 public class ListGameViewModel extends AndroidViewModel {
 
 
-
-
-
-
     public ListGameViewModel(@NonNull Application application) {
             super(application);
     }

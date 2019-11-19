@@ -9,7 +9,7 @@ import retrofit2.http.GET;
 
 public interface IMyAPI {
 
-    @GET("games_list")
+    @GET("1b049dc214dd09b01d62b9a26e9171c9/raw/games_list")
     Observable<List<Games>> getGames();
 
 }

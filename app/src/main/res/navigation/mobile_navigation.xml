@@ -12,16 +12,4 @@
         tools:layout="@layout/fragment_home" />
 
 
-    <fragment
-        android:id="@+id/nav_tools"
-        android:name="com.example.flashcard_game.Views.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
-
-    <fragment
-        android:id="@+id/nav_share"
-        android:name="com.example.flashcard_game.Views.ui.share.ShareFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
-
 </navigation>
