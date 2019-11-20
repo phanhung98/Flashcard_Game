@@ -6,6 +6,7 @@ public class ApiUtils {
         public static final String URL_GAME_DETAIL="";
         public static final String FLASHCARD="";
 
+
         private ApiUtils(){
 
         }
