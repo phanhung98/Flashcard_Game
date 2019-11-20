@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ccvn.flashcard_game.models.Game;
 import com.ccvn.flashcard_game.R;
-import com.ccvn.flashcard_game.retrofit.ApiUtils;
+import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.Adapter.GameAdapter;
 
@@ -48,7 +48,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
                              ViewGroup container, Bundle savedInstanceState) {
         list= new ArrayList<>();
       // Init GameAPIService class
-        GameAPIService = ApiUtils.getAPIService();
+        GameAPIService = APIUtils.getAPIService();
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
@@ -61,7 +61,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     }
     // Fetch data form API.
     private void fetchdata(){
-        compositeDisposable.add(GameAPIService.getGames()
+        compositeDisposable.add(GameAPIService.get_game()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Game>>() {
@@ -96,14 +96,10 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     // click item on recyclerview.
     @Override
     public void onGameClick(int position) {
-        if (position ==0){
+
+          int id= list.get(position).getId();
             Intent intent= new Intent(getActivity(), GameActivity.class);
             startActivity(intent);
-        }
-        if (position ==1){
-            Intent intent= new Intent(getActivity(), GameDetailActivity.class);
-            startActivity(intent);
-        }
     }
     // check online or not.
     protected boolean isOnline(){
