@@ -1,4 +1,4 @@
-package com.ccvn.flashcard_game.ViewModels;
+package com.ccvn.flashcard_game.viewmodels;
 
 import android.app.Application;
 

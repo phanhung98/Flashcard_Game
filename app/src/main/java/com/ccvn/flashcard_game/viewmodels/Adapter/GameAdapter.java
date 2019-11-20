@@ -1,4 +1,4 @@
-package com.ccvn.flashcard_game.ViewModels.Adapter;
+package com.ccvn.flashcard_game.viewmodels.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.ccvn.flashcard_game.Models.Games;
+import com.ccvn.flashcard_game.models.Game;
 import com.ccvn.flashcard_game.R;
 
 import java.util.List;
@@ -19,10 +19,10 @@ import java.util.List;
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
 
    public static Context context;
-   public List<Games> gamelist;
+   public List<Game> gamelist;
    private OnGameListener mOnGameListener;
 
-    public GameAdapter(Context context, List<Games> gamelist, OnGameListener onGameListener) {
+    public GameAdapter(Context context, List<Game> gamelist, OnGameListener onGameListener) {
         this.context = context;
         this.gamelist = gamelist;
         this.mOnGameListener= onGameListener;
@@ -43,7 +43,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
 //        holder.gameImage.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition_animation));
 //        holder.container.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_transition_animation));
 
-        Games currentGame= gamelist.get(position);
+        Game currentGame= gamelist.get(position);
         holder.bindto(currentGame);
 
     }
@@ -77,12 +77,12 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
 
         }
 
-        public void bindto(Games currentGames){
+        public void bindto(Game currentGame){
 
 
-            txt_game_name.setText(currentGames.getName());
-//       txt_flashcard_count.setText("Consist: "+currentGames.getFlashcard_count()+ " Flashcard");
-            Glide.with(GameAdapter.context).load(currentGames.getThumbnail()).into(gameImage);
+            txt_game_name.setText(currentGame.getName());
+//       txt_flashcard_count.setText("Consist: "+currentGame.getFlashcard_count()+ " Flashcard");
+            Glide.with(GameAdapter.context).load(currentGame.getThumbnail()).into(gameImage);
         }
 
 

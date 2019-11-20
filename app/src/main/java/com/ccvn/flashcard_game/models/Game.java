@@ -1,6 +1,6 @@
-package com.ccvn.flashcard_game.Models;
+package com.ccvn.flashcard_game.models;
 
-public class Games {
+public class Game {
 
     private String name;
     private String thumbnail;

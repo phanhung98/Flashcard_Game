@@ -1,4 +1,4 @@
-package com.ccvn.flashcard_game.Views;
+package com.ccvn.flashcard_game.views;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,11 +17,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ccvn.flashcard_game.Models.Games;
+import com.ccvn.flashcard_game.models.Game;
 import com.ccvn.flashcard_game.R;
-import com.ccvn.flashcard_game.Retrofit.ApiUtils;
-import com.ccvn.flashcard_game.Retrofit.getGameList;
-import com.ccvn.flashcard_game.ViewModels.Adapter.GameAdapter;
+import com.ccvn.flashcard_game.retrofit.ApiUtils;
+import com.ccvn.flashcard_game.retrofit.GameAPIService;
+import com.ccvn.flashcard_game.viewmodels.Adapter.GameAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +34,10 @@ import io.reactivex.schedulers.Schedulers;
 
 @SuppressWarnings("ALL")
 public class ListGameFragment extends Fragment implements GameAdapter.OnGameListener {
-    getGameList getGameList;
+    GameAPIService GameAPIService;
 
     private RecyclerView recyclerView;
-    private List<Games> list;
+    private List<Game> list;
 
 
 
@@ -47,8 +47,8 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         list= new ArrayList<>();
-      // Init getGameList class
-        getGameList = ApiUtils.getAPIService();
+      // Init GameAPIService class
+        GameAPIService = ApiUtils.getAPIService();
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
@@ -61,19 +61,19 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     }
     // Fetch data form API.
     private void fetchdata(){
-        compositeDisposable.add(getGameList.getGames()
+        compositeDisposable.add(GameAPIService.getGames()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Games>>() {
+                .subscribe(new Consumer<List<Game>>() {
                     @Override
-                    public void accept(List<Games> games) throws Exception {
+                    public void accept(List<Game> games) throws Exception {
                         displayData(games);
                         list= games;
                     }
                 }));
     }
      // setup recyclerview and display.
-    private void displayData(List<Games> games) {
+    private void displayData(List<Game> games) {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -101,7 +101,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
             startActivity(intent);
         }
         if (position ==1){
-            Intent intent= new Intent(getActivity(), GameDetail.class);
+            Intent intent= new Intent(getActivity(), GameDetailActivity.class);
             startActivity(intent);
         }
     }

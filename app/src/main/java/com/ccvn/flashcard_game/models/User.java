@@ -1,6 +1,6 @@
-package com.ccvn.flashcard_game.Models;
+package com.ccvn.flashcard_game.models;
 
-public class Users {
+public class User {
     private String Username;
     private String Userpassword;
     private String Usersalt;

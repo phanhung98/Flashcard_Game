@@ -1,4 +1,4 @@
-package com.ccvn.flashcard_game.Views;
+package com.ccvn.flashcard_game.views;
 
 import android.os.Bundle;
 
@@ -19,7 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.ImageView;
 
-public class HomeActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
 
     private ImageView userphoto;
 

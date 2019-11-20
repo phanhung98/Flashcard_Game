@@ -1,4 +1,4 @@
-package com.ccvn.flashcard_game.Retrofit;
+package com.ccvn.flashcard_game.retrofit;
 
 import java.util.concurrent.TimeUnit;
 
@@ -7,7 +7,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitClient {
+public class APIClient {
 
     private static Retrofit retrofitClient;
     final static OkHttpClient okHttpClient = new OkHttpClient.Builder()

@@ -1,6 +1,6 @@
-package com.ccvn.flashcard_game.Models;
+package com.ccvn.flashcard_game.models;
 
-public class Scores {
+public class Score {
 
     private int score;
 
