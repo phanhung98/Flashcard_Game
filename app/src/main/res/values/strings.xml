@@ -25,5 +25,9 @@
     <string name="textview">Screen Game 2</string>
     <string name="textview2">Screen game 1</string>
 
+    <!-- Toast string -->
+    <string name="check_connection">Please check your connection!</string>
+
+
 
 </resources>

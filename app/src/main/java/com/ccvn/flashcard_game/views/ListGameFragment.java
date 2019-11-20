@@ -54,7 +54,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
 
 
-       checkConextion();
+       checkConection();
         return root;
 
 
@@ -112,11 +112,12 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         }
     }
     // check conection.
-    public void checkConextion(){
+    public void checkConection(){
         if (isOnline()){
             fetchdata();
         }else {
-            Toast.makeText(getActivity(), "Please check your Internet", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(getActivity(), R.string.check_connection, Toast.LENGTH_SHORT).show();
         }
     }
 }
