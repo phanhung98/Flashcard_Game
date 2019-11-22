@@ -21,7 +21,7 @@ import android.widget.ImageView;
 
 public class GameActivity extends AppCompatActivity {
 
-    private ImageView userphoto;
+    private ImageView mUserphoto;
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -32,7 +32,7 @@ public class GameActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        userphoto=findViewById(R.id.userphoto);
+        mUserphoto=findViewById(R.id.userphoto);
 
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

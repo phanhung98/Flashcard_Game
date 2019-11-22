@@ -35,24 +35,25 @@ import io.reactivex.schedulers.Schedulers;
 
 @SuppressWarnings("ALL")
 public class ListGameFragment extends Fragment implements GameAdapter.OnGameListener {
-    GameAPIService GameAPIService;
 
-    private RecyclerView recyclerView;
-    private List<Game> list;
+    GameAPIService mGameAPIService;
+
+    private RecyclerView mRecyclerView;
+    private List<Game> mListgame;
 
 
 
-    CompositeDisposable compositeDisposable= new CompositeDisposable();
+    CompositeDisposable mCompositeDisposable= new CompositeDisposable();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        list= new ArrayList<>();
+        mListgame= new ArrayList<>();
       // Init GameAPIService class
-        GameAPIService = APIUtils.getAPIService();
+        mGameAPIService = APIUtils.getAPIService();
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
+        mRecyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
 
 
        checkConection();
@@ -62,25 +63,25 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     }
     // Fetch data form API.
     private void fetchdata(){
-        compositeDisposable.add(GameAPIService.get_game()
+        mCompositeDisposable.add(mGameAPIService.get_game()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Game>>() {
                     @Override
                     public void accept(List<Game> games) throws Exception {
                         displayData(games);
-                        list= games;
+                        mListgame= games;
                     }
                 }));
     }
      // setup recyclerview and display.
     private void displayData(List<Game> games) {
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         GameAdapter adapter= new GameAdapter(getContext(), games, this);
-        recyclerView.setAdapter(adapter);
-        runLayoutAnimation(recyclerView);
+        mRecyclerView.setAdapter(adapter);
+        runLayoutAnimation(mRecyclerView);
 
     }
     // load animation for item.

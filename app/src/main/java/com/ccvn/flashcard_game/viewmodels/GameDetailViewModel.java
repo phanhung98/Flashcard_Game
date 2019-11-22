@@ -19,30 +19,30 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GameDetailViewModel extends AndroidViewModel {
 
-    private GameAPIService gameAPIService;
-    private MutableLiveData<List<Game>> get_all_game_detail;
+    private GameAPIService mGameAPIService;
+    private MutableLiveData<List<Game>> mGamedetail;
 
     CompositeDisposable compositeDisposable= new CompositeDisposable();
 
     public GameDetailViewModel(@NonNull Application application) {
         super(application);
-        gameAPIService = APIUtils.getAPIService();
-        get_all_game_detail = new MutableLiveData<>();
+        mGameAPIService = APIUtils.getAPIService();
+        mGamedetail = new MutableLiveData<>();
     }
 
     public MutableLiveData<List<Game>> getAllGamedetail(){
-        return get_all_game_detail;
+        return mGamedetail;
     }
     // get all game detail
     public void get_game_detail(){
 
-        compositeDisposable.add(gameAPIService.get_game_detail()
+        compositeDisposable.add(mGameAPIService.get_game_detail()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Game>>() {
                     @Override
                     public void accept(List<Game> games) throws Exception {
-                            get_all_game_detail.setValue(games);
+                            mGamedetail.setValue(games);
                     }
                 }));
 

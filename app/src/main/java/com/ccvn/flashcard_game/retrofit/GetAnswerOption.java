@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class GetAnswerOption extends AsyncTask<String,Void,String>{
 
     Context mContext;
     String url= APIUtils.BASE_URL + APIUtils.URL_GAMEPLAY;
+    String[] mAnsweroption = new String[3];
 
 
     public GetAnswerOption(Context mContext) {
@@ -64,16 +66,24 @@ public class GetAnswerOption extends AsyncTask<String,Void,String>{
         List<String> list_answer_option = new ArrayList<>();
 
         try {
-            JSONObject  jsonObject = new JSONObject(s);
-            JSONArray jsonArray = jsonObject.getJSONArray(APIUtils.URL_GAMEPLAY);
-            for (int i = 0; i < jsonArray.length(); i++){
 
+            JSONObject  jsonObject = new JSONObject(s);
+            JSONArray jsonArray = jsonObject.getJSONArray("answer_option");
+            for (int i = 0; i < jsonArray.length(); i++){
+                    mAnsweroption[i] = jsonArray.getString(i);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        getarr();
 
     }
+
+    public void getarr(){
+
+        Toast.makeText(mContext, mAnsweroption[1], Toast.LENGTH_SHORT).show();
+
+    }
+
 }

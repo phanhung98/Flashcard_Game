@@ -31,11 +31,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GameDetailActivity extends AppCompatActivity {
 
-    private TextView tv_game_name_detail, tv_highest_score, tv_flashcard_total;
-    private ImageView image_detail;
+    private TextView mGamenamedetail, mHighestscore, mFlashcardtotal;
+    private ImageView mImagedetail;
 
 
-    GameDetailViewModel gameDetailViewModel;
+    GameDetailViewModel mGameDetailViewModel;
 
 
 
@@ -43,8 +43,8 @@ public class GameDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_detail);
-            gameDetailViewModel = ViewModelProviders.of(this).get(GameDetailViewModel.class);
-            gameDetailViewModel.get_game_detail();
+            mGameDetailViewModel = ViewModelProviders.of(this).get(GameDetailViewModel.class);
+            mGameDetailViewModel.get_game_detail();
 
         initview();
 
@@ -56,15 +56,15 @@ public class GameDetailActivity extends AppCompatActivity {
 
     private void show_game_detail() {
 
-        gameDetailViewModel.getAllGamedetail().observe(GameDetailActivity.this, new Observer<List<Game>>() {
+        mGameDetailViewModel.getAllGamedetail().observe(GameDetailActivity.this, new Observer<List<Game>>() {
             @Override
             public void onChanged(List<Game> games) {
                 Intent intent = getIntent();
                 int position = intent.getIntExtra("position", 0);
-                tv_game_name_detail.setText(games.get(position).getName());
-                tv_highest_score.setText("Highest Score: " + games.get(position).getHighest_score());
-                tv_flashcard_total.setText("Consist: " + games.get(position).getFlashcard_total());
-                Glide.with(GameDetailActivity.this).load(games.get(position).getThumbnail()).into(image_detail);
+                mGamenamedetail.setText(games.get(position).getName());
+                mHighestscore.setText("Highest Score: " + games.get(position).getHighestscore());
+                mFlashcardtotal.setText("Consist: " + games.get(position).getFlashcardtotal());
+                Glide.with(GameDetailActivity.this).load(games.get(position).getThumbnail()).into(mImagedetail);
             }
         });
 
@@ -72,10 +72,10 @@ public class GameDetailActivity extends AppCompatActivity {
 
     private void initview() {
 
-        tv_game_name_detail = findViewById(R.id.tv_game_name_detail);
-        tv_highest_score = findViewById(R.id.tv_game_highest_score);
-        tv_flashcard_total=findViewById(R.id.tv_flashcard_total);
-        image_detail = findViewById(R.id.image_detail);
+        mGamenamedetail = findViewById(R.id.tv_game_name_detail);
+        mHighestscore = findViewById(R.id.tv_game_highest_score);
+        mFlashcardtotal=findViewById(R.id.tv_flashcard_total);
+        mImagedetail = findViewById(R.id.image_detail);
 
     }
 

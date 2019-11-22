@@ -4,16 +4,24 @@ public class Game {
 
     private int id;
     private String name;
-    private int highest_score;
+    private int highestscore;
     private String thumbnail;
-    private int flashcard_total;
+    private int flashcardtotal;
 
-    public int getHighest_score() {
-        return highest_score;
+    public int getHighestscore() {
+        return highestscore;
     }
 
-    public void setHighest_score(int highest_score) {
-        this.highest_score = highest_score;
+    public void setHighestscore(int highestscore) {
+        this.highestscore = highestscore;
+    }
+
+    public int getFlashcardtotal() {
+        return flashcardtotal;
+    }
+
+    public void setFlashcardtotal(int flashcardtotal) {
+        this.flashcardtotal = flashcardtotal;
     }
 
     public int getId() {
@@ -40,11 +48,5 @@ public class Game {
         this.thumbnail = thumbnail;
     }
 
-    public int getFlashcard_total() {
-        return flashcard_total;
-    }
 
-    public void setFlashcard_total(int flashcard_total) {
-        this.flashcard_total = flashcard_total;
-    }
 }

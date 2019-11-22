@@ -30,15 +30,15 @@ import io.reactivex.schedulers.Schedulers;
 public class GamePlayActivity extends AppCompatActivity{
 
     GameAPIService gameAPIService;
-    int gameid;
+    private int mGameid;
     CompositeDisposable compositeDisposable= new CompositeDisposable();
 
-    List<Flashcard> flashcardList;
-    TextView tv_score, tv_question_count;
-    ImageView image_detail;
-    Button btn_submit;
-    RadioGroup radio_group;
-    RadioButton radio_button_one, radio_button_two, radio_button_three;
+    List<Flashcard> mFlashcardList;
+    TextView mScore, mQuestioncount;
+    ImageView mImagegameplay;
+    Button mNextcard;
+    RadioGroup mRadiogroup;
+    RadioButton mAnsweroptionone, mAnsweroptiontwo, mAnsweroptionthree;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,41 +46,41 @@ public class GamePlayActivity extends AppCompatActivity{
         setContentView(R.layout.activity_game_play);
 
         gameAPIService = APIUtils.getAPIService();
-        flashcardList = new ArrayList<>();
+        mFlashcardList = new ArrayList<>();
 
         initview();
 
         fetch_flashcard_data();
-        GetAnswerOption getAnswerOption= new GetAnswerOption(this);
+        GetAnswerOption getAnswerOption= new GetAnswerOption(GamePlayActivity.this);
             getAnswerOption.execute(APIUtils.BASE_URL + APIUtils.URL_GAMEPLAY);
 
 
 
-        btn_submit.setOnClickListener(new View.OnClickListener() {
+        mNextcard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (radio_button_one.isChecked()){
-                    Toast.makeText(GamePlayActivity.this, radio_button_one.getText(), Toast.LENGTH_SHORT).show();
+                if (mAnsweroptionone.isChecked()){
+                    Toast.makeText(GamePlayActivity.this, mAnsweroptionone.getText(), Toast.LENGTH_SHORT).show();
                 }
-                if (radio_button_two.isChecked()){
-                    Toast.makeText(GamePlayActivity.this, radio_button_two.getText(), Toast.LENGTH_SHORT).show();
+                if (mAnsweroptiontwo.isChecked()){
+                    Toast.makeText(GamePlayActivity.this, mAnsweroptiontwo.getText(), Toast.LENGTH_SHORT).show();
                 }
-                if (radio_button_three.isChecked()){
-                    Toast.makeText(GamePlayActivity.this, radio_button_three.getText(), Toast.LENGTH_SHORT).show();
+                if (mAnsweroptionthree.isChecked()){
+                    Toast.makeText(GamePlayActivity.this, mAnsweroptionthree.getText(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
     private void initview() {
-        tv_question_count = findViewById(R.id.tv_count_question);
-        tv_score = findViewById(R.id.tv_score);
-        image_detail = findViewById(R.id.image_detail);
-        btn_submit = findViewById(R.id.btn_submit);
-        radio_group = findViewById(R.id.radio_group);
-        radio_button_one =findViewById(R.id.radio_button_one);
-        radio_button_two =findViewById(R.id.radio_button_two);
-        radio_button_three =findViewById(R.id.radio_button_three);
+        mQuestioncount = findViewById(R.id.tv_count_question);
+        mScore = findViewById(R.id.tv_score);
+        mImagegameplay = findViewById(R.id.image_detail);
+        mNextcard = findViewById(R.id.btn_submit);
+        mRadiogroup = findViewById(R.id.radio_group);
+        mAnsweroptionone =findViewById(R.id.radio_button_one);
+        mAnsweroptiontwo =findViewById(R.id.radio_button_two);
+        mAnsweroptionthree =findViewById(R.id.radio_button_three);
     }
 
     public void fetch_flashcard_data(){
@@ -90,7 +90,7 @@ public class GamePlayActivity extends AppCompatActivity{
             .subscribe(new Consumer<List<Flashcard>>() {
                 @Override
                 public void accept(List<Flashcard> flashcards) throws Exception {
-                    flashcardList = flashcards;
+                    mFlashcardList = flashcards;
                     show_flashcard(flashcards);
                 }
             }));
@@ -98,16 +98,16 @@ public class GamePlayActivity extends AppCompatActivity{
 
     public void show_flashcard(List<Flashcard> list){
 
-                Glide.with(GamePlayActivity.this).load(list.get(0).getUpload_path()).into(image_detail);
+                Glide.with(GamePlayActivity.this).load(list.get(0).getUploadpath()).into(mImagegameplay);
 
     }
 
     public int get_gameid(){
 
         Intent intent = getIntent();
-        gameid = intent.getIntExtra("GameID",0);
+        mGameid = intent.getIntExtra("GameID",0);
 
-        return gameid;
+        return mGameid;
     }
 
 }
