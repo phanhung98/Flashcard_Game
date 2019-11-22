@@ -31,8 +31,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GameDetailActivity extends AppCompatActivity {
 
-    private TextView mGamenamedetail, mHighestscore, mFlashcardtotal;
-    private ImageView mImagedetail;
+    private TextView mGameNameDetail, mHighestScore, mFlashcardTotal;
+    private ImageView mImageDetail;
 
 
     GameDetailViewModel mGameDetailViewModel;
@@ -61,10 +61,10 @@ public class GameDetailActivity extends AppCompatActivity {
             public void onChanged(List<Game> games) {
                 Intent intent = getIntent();
                 int position = intent.getIntExtra("position", 0);
-                mGamenamedetail.setText(games.get(position).getName());
-                mHighestscore.setText("Highest Score: " + games.get(position).getHighestscore());
-                mFlashcardtotal.setText("Consist: " + games.get(position).getFlashcardtotal());
-                Glide.with(GameDetailActivity.this).load(games.get(position).getThumbnail()).into(mImagedetail);
+                mGameNameDetail.setText(games.get(position).getName());
+                mHighestScore.setText("Highest Score: " + games.get(position).getHighestScore());
+                mFlashcardTotal.setText("Consist: " + games.get(position).getFlashcardTotal());
+                Glide.with(GameDetailActivity.this).load(games.get(position).getThumbnail()).into(mImageDetail);
             }
         });
 
@@ -72,10 +72,10 @@ public class GameDetailActivity extends AppCompatActivity {
 
     private void initview() {
 
-        mGamenamedetail = findViewById(R.id.tv_game_name_detail);
-        mHighestscore = findViewById(R.id.tv_game_highest_score);
-        mFlashcardtotal=findViewById(R.id.tv_flashcard_total);
-        mImagedetail = findViewById(R.id.image_detail);
+        mGameNameDetail = findViewById(R.id.tv_game_name_detail);
+        mHighestScore = findViewById(R.id.tv_game_highest_score);
+        mFlashcardTotal=findViewById(R.id.tv_flashcard_total);
+        mImageDetail = findViewById(R.id.image_detail);
 
     }
 

@@ -3,16 +3,23 @@ package com.ccvn.flashcard_game.models;
 public class Flashcard {
 
     private String word;
-    private String uploadpath;
-    private String[] answeroptions;
+    private String uploadPath;
+    private String[] answerOptions;
 
-
-    public String[] getAnsweroptions() {
-        return answeroptions;
+    public String getUploadPath() {
+        return uploadPath;
     }
 
-    public void setAnsweroptions(String[] answeroptions) {
-        this.answeroptions = answeroptions;
+    public void setUploadPath(String uploadPath) {
+        this.uploadPath = uploadPath;
+    }
+
+    public String[] getAnswerOptions() {
+        return answerOptions;
+    }
+
+    public void setAnswerOptions(String[] answerOptions) {
+        this.answerOptions = answerOptions;
     }
 
     public String getWord() {
@@ -23,11 +30,4 @@ public class Flashcard {
         this.word = word;
     }
 
-    public String getUploadpath() {
-        return uploadpath;
-    }
-
-    public void setUploadpath(String uploadpath) {
-        this.uploadpath = uploadpath;
-    }
 }

@@ -39,7 +39,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     GameAPIService mGameAPIService;
 
     private RecyclerView mRecyclerView;
-    private List<Game> mListgame;
+    private List<Game> mListGame;
 
 
 
@@ -48,7 +48,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        mListgame= new ArrayList<>();
+        mListGame= new ArrayList<>();
       // Init GameAPIService class
         mGameAPIService = APIUtils.getAPIService();
 
@@ -70,7 +70,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
                     @Override
                     public void accept(List<Game> games) throws Exception {
                         displayData(games);
-                        mListgame= games;
+                        mListGame= games;
                     }
                 }));
     }

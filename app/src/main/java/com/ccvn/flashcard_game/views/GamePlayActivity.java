@@ -30,15 +30,15 @@ import io.reactivex.schedulers.Schedulers;
 public class GamePlayActivity extends AppCompatActivity{
 
     GameAPIService gameAPIService;
-    private int mGameid;
-    CompositeDisposable compositeDisposable= new CompositeDisposable();
+    private int mGameId;
+    CompositeDisposable mCompositeDisposable= new CompositeDisposable();
 
     List<Flashcard> mFlashcardList;
-    TextView mScore, mQuestioncount;
-    ImageView mImagegameplay;
-    Button mNextcard;
-    RadioGroup mRadiogroup;
-    RadioButton mAnsweroptionone, mAnsweroptiontwo, mAnsweroptionthree;
+    TextView mScore, mQuestionCount;
+    ImageView mImageGameplay;
+    Button mNextCard;
+    RadioGroup mRadioGroup;
+    RadioButton mAnswerOptionOne, mAnswerOptionTwo, mAnswerOptionThree;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,35 +56,35 @@ public class GamePlayActivity extends AppCompatActivity{
 
 
 
-        mNextcard.setOnClickListener(new View.OnClickListener() {
+        mNextCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAnsweroptionone.isChecked()){
-                    Toast.makeText(GamePlayActivity.this, mAnsweroptionone.getText(), Toast.LENGTH_SHORT).show();
+                if (mAnswerOptionOne.isChecked()){
+                    Toast.makeText(GamePlayActivity.this, mAnswerOptionOne.getText(), Toast.LENGTH_SHORT).show();
                 }
-                if (mAnsweroptiontwo.isChecked()){
-                    Toast.makeText(GamePlayActivity.this, mAnsweroptiontwo.getText(), Toast.LENGTH_SHORT).show();
+                if (mAnswerOptionTwo.isChecked()){
+                    Toast.makeText(GamePlayActivity.this, mAnswerOptionTwo.getText(), Toast.LENGTH_SHORT).show();
                 }
-                if (mAnsweroptionthree.isChecked()){
-                    Toast.makeText(GamePlayActivity.this, mAnsweroptionthree.getText(), Toast.LENGTH_SHORT).show();
+                if (mAnswerOptionThree.isChecked()){
+                    Toast.makeText(GamePlayActivity.this, mAnswerOptionThree.getText(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
     private void initview() {
-        mQuestioncount = findViewById(R.id.tv_count_question);
+        mQuestionCount = findViewById(R.id.tv_count_question);
         mScore = findViewById(R.id.tv_score);
-        mImagegameplay = findViewById(R.id.image_detail);
-        mNextcard = findViewById(R.id.btn_submit);
-        mRadiogroup = findViewById(R.id.radio_group);
-        mAnsweroptionone =findViewById(R.id.radio_button_one);
-        mAnsweroptiontwo =findViewById(R.id.radio_button_two);
-        mAnsweroptionthree =findViewById(R.id.radio_button_three);
+        mImageGameplay = findViewById(R.id.image_detail);
+        mNextCard = findViewById(R.id.btn_submit);
+        mRadioGroup = findViewById(R.id.radio_group);
+        mAnswerOptionOne =findViewById(R.id.radio_button_one);
+        mAnswerOptionTwo =findViewById(R.id.radio_button_two);
+        mAnswerOptionThree =findViewById(R.id.radio_button_three);
     }
 
     public void fetch_flashcard_data(){
-            compositeDisposable.add(gameAPIService.get_flash_card()
+            mCompositeDisposable.add(gameAPIService.get_flash_card()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Consumer<List<Flashcard>>() {
@@ -98,16 +98,16 @@ public class GamePlayActivity extends AppCompatActivity{
 
     public void show_flashcard(List<Flashcard> list){
 
-                Glide.with(GamePlayActivity.this).load(list.get(0).getUploadpath()).into(mImagegameplay);
+                Glide.with(GamePlayActivity.this).load(list.get(0).getUploadPath()).into(mImageGameplay);
 
     }
 
     public int get_gameid(){
 
         Intent intent = getIntent();
-        mGameid = intent.getIntExtra("GameID",0);
+        mGameId = intent.getIntExtra("GameID",0);
 
-        return mGameid;
+        return mGameId;
     }
 
 }
