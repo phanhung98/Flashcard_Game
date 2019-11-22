@@ -1,31 +1,31 @@
 package com.ccvn.flashcard_game.models;
 
 public class User {
-    private String Username;
-    private String Userpassword;
-    private String Usersalt;
+    private String userName;
+    private String userPassword;
+    private String userSalt;
 
-    public String getUsername() {
-        return Username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        Username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getUserpassword() {
-        return Userpassword;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setUserpassword(String userpassword) {
-        Userpassword = userpassword;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
-    public String getUsersalt() {
-        return Usersalt;
+    public String getUserSalt() {
+        return userSalt;
     }
 
-    public void setUsersalt(String usersalt) {
-        Usersalt = usersalt;
+    public void setUserSalt(String userSalt) {
+        this.userSalt = userSalt;
     }
 }

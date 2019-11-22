@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ccvn.flashcard_game.views.GamePlayActivity">
+
+<!--    <include-->
+<!--        android:id="@+id/toolbar"-->
+<!--        layout="@layout/toolbar"-->
+<!--        />-->
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_margin="20dp"
+        android:textSize="25sp"
+        android:layout_below="@+id/toolbar"
+        android:text="@string/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tv_count_question"
+        android:layout_margin="20dp"
+        android:layout_alignParentRight="true"
+        android:textSize="25sp"
+        android:layout_below="@+id/toolbar"
+        android:text="@string/question_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_below="@+id/tv_count_question"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:id="@+id/image_detail"
+        android:layout_width="250dp"
+        android:layout_height="250dp"/>
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:weightSum="3"
+        android:layout_below="@+id/image_detail"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="250dp"
+        android:layout_height="150dp">
+
+        <RadioButton
+            android:id="@+id/radio_button_one"
+            android:text="Hot"
+            android:paddingLeft="20dp"
+            android:layout_weight="1"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+        <RadioButton
+            android:id="@+id/radio_button_two"
+            android:text="Cold"
+            android:paddingLeft="20dp"
+            android:layout_weight="1"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+        <RadioButton
+            android:id="@+id/radio_button_three"
+            android:text="Warm"
+            android:paddingLeft="20dp"
+            android:layout_weight="1"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+    </RadioGroup>
+
+    <Button
+        android:layout_below="@+id/radio_group"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/submit_button"
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

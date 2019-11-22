@@ -18,12 +18,12 @@ import java.util.List;
 
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder> {
 
-   public static Context context;
+   public static Context mContext;
    public List<Game> gamelist;
    private OnGameListener mOnGameListener;
 
     public GameAdapter(Context context, List<Game> gamelist, OnGameListener onGameListener) {
-        this.context = context;
+        this.mContext = context;
         this.gamelist = gamelist;
         this.mOnGameListener= onGameListener;
     }
@@ -57,9 +57,8 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
 
 
 
-        public TextView txt_game_name;
-        public TextView txt_flashcard_count;
-        public ImageView gameImage;
+        public TextView mGamename;
+        public ImageView mGameImage;
 
         OnGameListener onGameListener;
 
@@ -68,9 +67,9 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         public GameViewHolder(@NonNull View itemView, GameAdapter.OnGameListener onGameListener) {
             super(itemView);
 
-            txt_game_name=(TextView)itemView.findViewById(R.id.game_name);
-            txt_flashcard_count=(TextView)itemView.findViewById(R.id.flashcard_count);
-            gameImage=(ImageView) itemView.findViewById(R.id.gameImage);
+            mGamename=(TextView)itemView.findViewById(R.id.game_name);
+
+            mGameImage=(ImageView) itemView.findViewById(R.id.gameImage);
             this.onGameListener= onGameListener;
 //        container=(RelativeLayout) itemView.findViewById(R.id.container);
             itemView.setOnClickListener(this);
@@ -80,9 +79,9 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         public void bindto(Game currentGame){
 
 
-            txt_game_name.setText(currentGame.getName());
+            mGamename.setText(currentGame.getName());
 //       txt_flashcard_count.setText("Consist: "+currentGame.getFlashcard_count()+ " Flashcard");
-            Glide.with(GameAdapter.context).load(currentGame.getThumbnail()).into(gameImage);
+            Glide.with(GameAdapter.mContext).load(currentGame.getThumbnail()).into(mGameImage);
         }
 
 
