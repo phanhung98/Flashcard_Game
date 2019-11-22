@@ -6,7 +6,7 @@ public class Game {
     private String name;
     private int highest_score;
     private String thumbnail;
-    private int Flashcard_count;
+    private int flashcard_total;
 
     public int getHighest_score() {
         return highest_score;
@@ -40,11 +40,11 @@ public class Game {
         this.thumbnail = thumbnail;
     }
 
-    public int getFlashcard_count() {
-        return Flashcard_count;
+    public int getFlashcard_total() {
+        return flashcard_total;
     }
 
-    public void setFlashcard_count(int flashcard_count) {
-        Flashcard_count = flashcard_count;
+    public void setFlashcard_total(int flashcard_total) {
+        this.flashcard_total = flashcard_total;
     }
 }

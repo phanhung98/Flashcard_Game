@@ -1,5 +1,6 @@
 package com.ccvn.flashcard_game.views;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -97,14 +98,18 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     @Override
     public void onGameClick(int position) {
 
-          int id= list.get(position).getId();
-            Intent intent= new Intent(getActivity(), GameActivity.class);
+          int posi = position;
+            Intent intent = new Intent(getActivity(), GameDetailActivity.class);
+            intent.putExtra("position", posi);
+
             startActivity(intent);
+
+
     }
     // check online or not.
     protected boolean isOnline(){
-        ConnectivityManager cm= (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo= cm.getActiveNetworkInfo();
+        ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnectedOrConnecting() ){
             return true;
         }else {

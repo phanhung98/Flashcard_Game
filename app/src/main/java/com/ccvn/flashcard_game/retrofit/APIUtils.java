@@ -1,7 +1,5 @@
 package com.ccvn.flashcard_game.retrofit;
 
-import com.ccvn.flashcard_game.views.GameDetailActivity;
-
 public class APIUtils {
 
         public static final String BASE_URL = "https://my-json-server.typicode.com/phanhung98/FakeApi/";

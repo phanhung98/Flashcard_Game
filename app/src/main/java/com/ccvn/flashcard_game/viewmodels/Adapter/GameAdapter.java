@@ -69,7 +69,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             super(itemView);
 
             txt_game_name=(TextView)itemView.findViewById(R.id.game_name);
-            txt_flashcard_count=(TextView)itemView.findViewById(R.id.flashcard_count);
+
             gameImage=(ImageView) itemView.findViewById(R.id.gameImage);
             this.onGameListener= onGameListener;
 //        container=(RelativeLayout) itemView.findViewById(R.id.container);
