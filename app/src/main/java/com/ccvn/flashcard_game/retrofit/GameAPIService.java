@@ -17,18 +17,18 @@ import retrofit2.http.POST;
 public interface GameAPIService {
 
     @GET(APIUtils.URL_GAME_LIST)
-    Observable<List<Game>> get_game();
+    Observable<List<Game>> getGame();
 
     @GET(APIUtils.URL_GAMEPLAY)
-    Observable<List<Flashcard>> get_flash_card();
+    Observable<List<Flashcard>> getFlashcard();
 
     @GET(APIUtils.URL_GAME_DETAIL)
-    Observable<List<Game>> get_game_detail();
+    Observable<List<Game>> getGameDetail();
 
 
     @POST("post")
     @FormUrlEncoded
-    Observable<Score> insert_score(@Field("user") String user,
+    Observable<Score> insertScore(@Field("user") String user,
                                     @Field("score") double score,
                                    @Field("Name") String gameName );
 

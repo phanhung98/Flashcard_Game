@@ -59,12 +59,12 @@ public class GamePlayActivity extends AppCompatActivity{
         gameAPIService = APIUtils.getAPIService();
 
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
-        mGamePlayViewModel.get_flashcard();
+        mGamePlayViewModel.getFlashcard();
 
         initview();
 
         mNextCard.setVisibility(View.INVISIBLE);
-        show_flashcard();
+        showFlashcard();
 
 
 
@@ -83,7 +83,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
 
 
-    public void show_flashcard(){
+    public void showFlashcard(){
 
 
 
@@ -106,7 +106,7 @@ public class GamePlayActivity extends AppCompatActivity{
                                 switch (checkedId){
                                     case R.id.radio_button_one:
                                         String value = (String) mAnswerOptionOne.getText();
-                                        get_right_answer(position);
+                                        getRightAnswer(position);
                                         if (value.equals(flashcardList.get(position).getRightAnswer())){
                                             score = score + 1;
                                             mScore.setText(getString(R.string.score) + score);
@@ -116,7 +116,7 @@ public class GamePlayActivity extends AppCompatActivity{
                                         break;
                                     case R.id.radio_button_two:
                                         String option = (String) mAnswerOptionTwo.getText();
-                                        get_right_answer(position);
+                                        getRightAnswer(position);
                                         if (option.equals(flashcardList.get(position).getRightAnswer())){
                                             score = score + 1;
                                             mScore.setText(getString(R.string.score) + score);
@@ -125,7 +125,7 @@ public class GamePlayActivity extends AppCompatActivity{
                                         break;
                                     case R.id.radio_button_three:
                                         String val = (String) mAnswerOptionThree.getText();
-                                        get_right_answer(position);
+                                        getRightAnswer(position);
                                         if (val.equals(flashcardList.get(position).getRightAnswer())){
                                             score = score + 1;
                                             mScore.setText(getString(R.string.score) + score);
@@ -151,8 +151,8 @@ public class GamePlayActivity extends AppCompatActivity{
         if (position <= mFlashcardList.size()-1){
             count++;
 
-            set_answer_option_default();
-            show_flashcard();
+            setAnswerOptionDefault();
+            showFlashcard();
 
             if (position == mFlashcardList.size()-1){
                 mNextCard.setText("Finish");
@@ -167,7 +167,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
     }
 
-    public void get_right_answer(int i){
+    public void getRightAnswer(int i){
 
         if (mAnswerOptionOne.getText().equals(mFlashcardList.get(i).getRightAnswer())){
             mAnswerOptionOne.setTextColor(Color.GREEN);
@@ -197,7 +197,7 @@ public class GamePlayActivity extends AppCompatActivity{
         }
 
     }
-    private void set_answer_option_default(){
+    private void setAnswerOptionDefault(){
         mAnswerOptionOne.setTextColor(Color.BLACK);
         mAnswerOptionOne.setClickable(true);
 

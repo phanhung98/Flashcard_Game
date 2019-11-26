@@ -34,9 +34,9 @@ public class GameDetailViewModel extends AndroidViewModel {
         return mGamedetail;
     }
     // get all game detail
-    public void get_game_detail(){
+    public void getGameDetail(){
 
-        compositeDisposable.add(mGameAPIService.get_game_detail()
+        compositeDisposable.add(mGameAPIService.getGameDetail()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Game>>() {
