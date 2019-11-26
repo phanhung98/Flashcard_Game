@@ -43,6 +43,7 @@ public class GameDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_detail);
+
             mGameDetailViewModel = ViewModelProviders.of(this).get(GameDetailViewModel.class);
             mGameDetailViewModel.get_game_detail();
 

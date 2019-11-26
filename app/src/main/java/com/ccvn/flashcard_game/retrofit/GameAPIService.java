@@ -2,12 +2,17 @@ package com.ccvn.flashcard_game.retrofit;
 
 import com.ccvn.flashcard_game.models.Flashcard;
 import com.ccvn.flashcard_game.models.Game;
+import com.ccvn.flashcard_game.models.Score;
 
+import java.io.File;
 import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 public interface GameAPIService {
 
@@ -21,7 +26,10 @@ public interface GameAPIService {
     Observable<List<Game>> get_game_detail();
 
 
-//    @POST()
-//    Observable<Integer> get_score();
+    @POST("post")
+    @FormUrlEncoded
+    Observable<Score> insert_score(@Field("user") String user,
+                                    @Field("score") double score,
+                                   @Field("Name") String gameName );
 
 }

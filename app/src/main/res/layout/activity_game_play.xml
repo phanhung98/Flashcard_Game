@@ -16,7 +16,6 @@
         android:layout_margin="20dp"
         android:textSize="25sp"
         android:layout_below="@+id/toolbar"
-        android:text="@string/score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <TextView
@@ -49,7 +48,6 @@
 
         <RadioButton
             android:id="@+id/radio_button_one"
-            android:text="Hot"
             android:paddingLeft="20dp"
             android:layout_weight="1"
             android:textSize="25sp"
@@ -57,7 +55,6 @@
             android:layout_height="0dp"/>
         <RadioButton
             android:id="@+id/radio_button_two"
-            android:text="Cold"
             android:paddingLeft="20dp"
             android:layout_weight="1"
             android:textSize="25sp"
@@ -65,7 +62,6 @@
             android:layout_height="0dp"/>
         <RadioButton
             android:id="@+id/radio_button_three"
-            android:text="Warm"
             android:paddingLeft="20dp"
             android:layout_weight="1"
             android:textSize="25sp"
@@ -78,8 +74,11 @@
         android:layout_below="@+id/radio_group"
         android:layout_marginTop="40dp"
         android:layout_centerHorizontal="true"
-        android:text="@string/submit_button"
+        android:text="@string/nextcard_button"
         android:id="@+id/btn_submit"
+        android:background="@drawable/button_style"
+        android:textColor="#FA71CD"
+        android:onClick="nextCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

@@ -25,13 +25,14 @@
     <string name="textview">Screen Game 2</string>
     <string name="textview2">Screen game 1</string>
 
-    <string name="score">Score: </string>
+
     <string name="question_count">1/12</string>
-    <string name="submit_button">Submit</string>
+    <string name="nextcard_button">Next Card</string>
 
     <!-- Toast string -->
     <string name="check_connection">Please check your connection!</string>
     <string name="button_play">Play Now</string>
+    <string name="score">Score: </string>
 
 
 </resources>
