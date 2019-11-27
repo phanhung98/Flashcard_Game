@@ -63,7 +63,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     }
     // Fetch data form API.
     private void fetchdata(){
-        mCompositeDisposable.add(mGameAPIService.get_game()
+        mCompositeDisposable.add(mGameAPIService.getGame()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Game>>() {

@@ -18,16 +18,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.models.Game;
-import com.ccvn.flashcard_game.retrofit.APIUtils;
-import com.ccvn.flashcard_game.retrofit.GameAPIService;
+
 import com.ccvn.flashcard_game.viewmodels.GameDetailViewModel;
 
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+
 
 public class GameDetailActivity extends AppCompatActivity {
 
@@ -43,18 +39,19 @@ public class GameDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_detail);
+
             mGameDetailViewModel = ViewModelProviders.of(this).get(GameDetailViewModel.class);
-            mGameDetailViewModel.get_game_detail();
+            mGameDetailViewModel.getGameDetail();
 
         initview();
 
-        show_game_detail();
+        showGameDetail();
 
 
     }
 
 
-    private void show_game_detail() {
+    private void showGameDetail() {
 
         mGameDetailViewModel.getAllGamedetail().observe(GameDetailActivity.this, new Observer<List<Game>>() {
             @Override

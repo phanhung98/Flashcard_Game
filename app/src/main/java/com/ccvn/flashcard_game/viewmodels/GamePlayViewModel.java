@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.ccvn.flashcard_game.models.Game;
+import com.ccvn.flashcard_game.models.Flashcard;
 import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 
@@ -17,32 +17,32 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class GameDetailViewModel extends AndroidViewModel {
+public class GamePlayViewModel extends AndroidViewModel {
 
     private GameAPIService mGameAPIService;
-    private MutableLiveData<List<Game>> mGamedetail;
+    private MutableLiveData<List<Flashcard>> mFlashcardlist;
 
     CompositeDisposable compositeDisposable= new CompositeDisposable();
 
-    public GameDetailViewModel(@NonNull Application application) {
+    public GamePlayViewModel(@NonNull Application application) {
         super(application);
         mGameAPIService = APIUtils.getAPIService();
-        mGamedetail = new MutableLiveData<>();
+        mFlashcardlist = new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<Game>> getAllGamedetail(){
-        return mGamedetail;
+    public MutableLiveData<List<Flashcard>> getAllFlashcard(){
+        return mFlashcardlist;
     }
-    // get all game detail
-    public void getGameDetail(){
 
-        compositeDisposable.add(mGameAPIService.getGameDetail()
+    public void getFlashcard(){
+
+        compositeDisposable.add(mGameAPIService.getFlashcard()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Game>>() {
+                .subscribe(new Consumer<List<Flashcard>>() {
                     @Override
-                    public void accept(List<Game> games) throws Exception {
-                            mGamedetail.setValue(games);
+                    public void accept(List<Flashcard> flashcardList) throws Exception {
+                        mFlashcardlist.setValue(flashcardList);
                     }
                 }));
 
