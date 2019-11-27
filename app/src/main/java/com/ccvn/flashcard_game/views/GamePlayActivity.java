@@ -42,6 +42,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
     private static final int WORD_TYPE = 1;
     private static final int IMAGE_TYPE = 2;
+    private static final int IMAGE_AND_WORD_TYPE = 3;
 
     GameAPIService gameAPIService;
     private int mGameId;
@@ -50,6 +51,7 @@ public class GamePlayActivity extends AppCompatActivity{
     List<Flashcard> mFlashcardList;
     TextView mScore, mQuestionCount;
     TextView mImageViewText;
+    TextView mQuestion;
     ImageView mImageGameplay;
     Button mNextCard;
     RadioGroup mRadioGroup;
@@ -70,7 +72,8 @@ public class GamePlayActivity extends AppCompatActivity{
 
         initview();
         mImageViewText.setVisibility(View.INVISIBLE);
-        mImageGameplay.setVisibility(View.VISIBLE);
+        mImageGameplay.setVisibility(View.INVISIBLE);
+        mQuestion.setVisibility(View.INVISIBLE);
 
         mNextCard.setVisibility(View.INVISIBLE);
         showFlashcard();
@@ -87,6 +90,7 @@ public class GamePlayActivity extends AppCompatActivity{
         mAnswerOptionTwo = findViewById(R.id.radio_button_two);
         mAnswerOptionThree = findViewById(R.id.radio_button_three);
         mImageViewText = findViewById(R.id.ImageViewText);
+        mQuestion = findViewById(R.id.tv_question);
     }
 
 
@@ -109,6 +113,7 @@ public class GamePlayActivity extends AppCompatActivity{
                         if (flashcardList.get(position).getTypeId() == IMAGE_TYPE) {
 
                             mImageViewText.setVisibility(View.INVISIBLE);
+                            mQuestion.setVisibility(View.INVISIBLE);
                             mImageGameplay.setVisibility(View.VISIBLE);
 
                             Glide.with(GamePlayActivity.this).load(flashcardList.get(position).getUploadPath()).into(mImageGameplay);
@@ -118,9 +123,21 @@ public class GamePlayActivity extends AppCompatActivity{
                         if (flashcardList.get(position).getTypeId() == WORD_TYPE){
 
                             mImageGameplay.setVisibility(View.INVISIBLE);
+                            mQuestion.setVisibility(View.INVISIBLE);
                             mImageViewText.setVisibility(View.VISIBLE);
 
                             mImageViewText.setText(flashcardList.get(position).getWord());
+
+                        }
+
+                        if (flashcardList.get(position).getTypeId() == 3){
+
+                            mImageGameplay.setVisibility(View.VISIBLE);
+                            mQuestion.setVisibility(View.VISIBLE);
+                            mImageViewText.setVisibility(View.INVISIBLE);
+
+                            mQuestion.setText(flashcardList.get(position).getWord()+"?");
+                            Glide.with(GamePlayActivity.this).load(flashcardList.get(position).getUploadPath()).into(mImageGameplay);
 
                         }
 
