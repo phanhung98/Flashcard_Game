@@ -6,6 +6,7 @@ public class Flashcard {
 
     private int id;
     private String word;
+    private int typeId;
     private String uploadPath;
     private String rightAnswer;
     private List<String> answerOption = null;
@@ -17,6 +18,14 @@ public class Flashcard {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 
     public String getUploadPath() {

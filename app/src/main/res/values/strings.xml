@@ -34,5 +34,7 @@
     <string name="button_play">Play Now</string>
     <string name="score">Score: </string>
 
+    <!-- Score dialog -->
+    <string name="title">Congratulation!</string>
 
 </resources>
