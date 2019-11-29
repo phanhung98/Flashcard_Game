@@ -6,10 +6,10 @@ public class Flashcard {
 
     private int id;
     private String word;
-    private int typeId;
-    private String uploadPath;
-    private String rightAnswer;
-    private List<String> answerOption = null;
+    private int type_id;
+    private String upload_path;
+    private String right_answer;
+    private List<String> value = null;
 
 
     public int getId() {
@@ -18,22 +18,6 @@ public class Flashcard {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
-    }
-
-    public String getUploadPath() {
-        return uploadPath;
-    }
-
-    public void setUploadPath(String uploadPath) {
-        this.uploadPath = uploadPath;
     }
 
 
@@ -45,19 +29,35 @@ public class Flashcard {
         this.word = word;
     }
 
-    public String getRightAnswer() {
-        return rightAnswer;
+    public int getType_id() {
+        return type_id;
     }
 
-    public void setRightAnswer(String rightAnswer) {
-        this.rightAnswer = rightAnswer;
+    public void setType_id(int type_id) {
+        this.type_id = type_id;
     }
 
-    public List<String> getAnswerOption() {
-        return answerOption;
+    public String getUpload_path() {
+        return upload_path;
     }
 
-    public void setAnswerOption(List<String> answerOption) {
-        this.answerOption = answerOption;
+    public void setUpload_path(String upload_path) {
+        this.upload_path = upload_path;
+    }
+
+    public String getRight_answer() {
+        return right_answer;
+    }
+
+    public void setRight_answer(String right_answer) {
+        this.right_answer = right_answer;
+    }
+
+    public List<String> getValue() {
+        return value;
+    }
+
+    public void setValue(List<String> value) {
+        this.value = value;
     }
 }

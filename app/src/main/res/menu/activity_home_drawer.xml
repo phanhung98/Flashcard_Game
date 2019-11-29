@@ -9,6 +9,11 @@
             android:icon="@drawable/ic_videogame_asset_black_24dp"
             android:title="@string/menu_listgame" />
 
+        <item
+            android:id="@+id/nav_score"
+            android:icon="@drawable/ic_assignment_black_24dp"
+            android:title="@string/menu_hightscore" />
+
 
     </group>
 
