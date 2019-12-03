@@ -45,7 +45,13 @@ public class GameDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_detail);
 
+      Toolbar toolbar = findViewById(R.id.toolbar);
+      setSupportActionBar(toolbar);
 
+      ActionBar actionBar = getSupportActionBar();
+      actionBar.setLogo(R.drawable.ic_home_black_24dp);
+      actionBar.setDisplayUseLogoEnabled(true);
+      actionBar.setDisplayShowTitleEnabled(false);
 
 
         mListFlashcardId = new ArrayList<>();
@@ -106,4 +112,15 @@ public class GameDetailActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.action_highscore:
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
