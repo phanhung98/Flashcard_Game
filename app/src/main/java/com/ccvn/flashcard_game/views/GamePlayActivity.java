@@ -60,7 +60,6 @@ public class GamePlayActivity extends AppCompatActivity{
     private Flashcard mFlashcard;
 
     private int position =0;
-    private int mFlashcardPosition = 0;
     private int count = 1;
     private double score = 0.0;
 
@@ -73,12 +72,12 @@ public class GamePlayActivity extends AppCompatActivity{
 
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
 
-        Intent intent = getIntent();
-        mFlashcardId =  intent.getIntegerArrayListExtra("Id");
+        getId();
 
-         nextFlashcard(position);
+        nextFlashcard(position);
 
         initview();
+
         mImageViewText.setVisibility(View.INVISIBLE);
         mImageGameplay.setVisibility(View.INVISIBLE);
         mQuestion.setVisibility(View.INVISIBLE);
@@ -101,15 +100,26 @@ public class GamePlayActivity extends AppCompatActivity{
         mNextCard = findViewById(R.id.btn_submit);
     }
 
+    //Get game Id and flashcard Id
+    private void getId(){
+
+        Intent intent = getIntent();
+        mFlashcardId =  intent.getIntegerArrayListExtra(GameDetailActivity.FLASHCARD_ID);
+        mGameId = intent.getIntExtra(GameDetailActivity.GAMEID, 0);
+
+    }
+
+    //Set url for next flashcard
     private void nextFlashcard(int pos){
 
-        String id = String.valueOf(mFlashcardId.get(pos));
-        mGamePlayViewModel.getNextFlashcard(id);
+        String flashcradId = String.valueOf(mFlashcardId.get(pos));
+        String url = mGameId + "/" + flashcradId;
+        mGamePlayViewModel.getNextFlashcard(flashcradId);
 
     }
 
 
-
+    //Show flashcard
     public void showFlashcard(){
 
                 mGamePlayViewModel.getAllFlashcard().observe(GamePlayActivity.this, new Observer<Flashcard>() {
@@ -185,6 +195,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
     }
 
+    //click next flashcard button
     public void nextCard(View view) {
 
         position++;
@@ -212,6 +223,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
     }
 
+    //Show score
    private void scoreDialog(){
 
         LayoutInflater inflater = getLayoutInflater();
@@ -238,6 +250,7 @@ public class GamePlayActivity extends AppCompatActivity{
         dialog.show();
    }
 
+   // get right answer
     public void getRightAnswer(){
 
 
@@ -339,6 +352,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
     }
 
+    // Set radio button to default
     private void setAnswerOptionDefault(){
 
         mAnswerOptionOne.setTextColor(Color.BLACK);

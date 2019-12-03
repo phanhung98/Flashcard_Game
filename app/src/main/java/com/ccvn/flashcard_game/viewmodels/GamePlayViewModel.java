@@ -33,9 +33,9 @@ public class GamePlayViewModel extends AndroidViewModel {
         return mFlashcard;
     }
 
-    public void getNextFlashcard(String id){
+    public void getNextFlashcard(String url){
 
-        compositeDisposable.add(mGameAPIService.getFlashcard(id)
+        compositeDisposable.add(mGameAPIService.getFlashcard(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Flashcard>() {

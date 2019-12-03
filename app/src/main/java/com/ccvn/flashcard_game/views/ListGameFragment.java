@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +25,7 @@ import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.Adapter.GameAdapter;
+import com.ccvn.flashcard_game.viewmodels.ListGameViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +39,12 @@ import io.reactivex.schedulers.Schedulers;
 @SuppressWarnings("ALL")
 public class ListGameFragment extends Fragment implements GameAdapter.OnGameListener {
 
-    GameAPIService mGameAPIService;
+    public static final String GAME_ID = "GameID";
 
+    GameAPIService mGameAPIService;
     private RecyclerView mRecyclerView;
     private List<Game> mListGame;
+    private ListGameViewModel mViewModel;
 
 
 
@@ -49,6 +54,10 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mListGame= new ArrayList<>();
+
+        mViewModel = ViewModelProviders.of(this).get(ListGameViewModel.class);
+        mViewModel.getGame();
+
       // Init GameAPIService class
         mGameAPIService = APIUtils.getAPIService();
 
@@ -61,25 +70,26 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
 
     }
-    // Fetch data form API.
-    private void fetchdata(){
-        mCompositeDisposable.add(mGameAPIService.getGame()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Game>>() {
-                    @Override
-                    public void accept(List<Game> games) throws Exception {
-                        displayData(games);
-                        mListGame= games;
-                    }
-                }));
+
+    private void getListGame(){
+
+        mViewModel.getAllGame().observe(ListGameFragment.this, new Observer<List<Game>>() {
+            @Override
+            public void onChanged(List<Game> games) {
+                displayData(games);
+                mListGame = games;
+            }
+        });
+
     }
+
      // setup recyclerview and display.
-    private void displayData(List<Game> games) {
+    private void displayData(List<Game> gameList) {
+
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        GameAdapter adapter= new GameAdapter(getContext(), games, this);
+        GameAdapter adapter= new GameAdapter(getContext(), gameList, this);
         mRecyclerView.setAdapter(adapter);
         runLayoutAnimation(mRecyclerView);
 
@@ -99,9 +109,9 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     @Override
     public void onGameClick(int position) {
 
-          int posi = position;
+          int id = mListGame.get(position).getId();
             Intent intent = new Intent(getActivity(), GameDetailActivity.class);
-            intent.putExtra("position", posi);
+            intent.putExtra(GAME_ID, id);
 
             startActivity(intent);
 
@@ -120,7 +130,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     // check conection.
     public void checkConection(){
         if (isOnline()){
-            fetchdata();
+           getListGame();
         }else {
 
             Toast.makeText(getActivity(), R.string.check_connection, Toast.LENGTH_SHORT).show();
