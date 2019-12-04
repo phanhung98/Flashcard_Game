@@ -24,8 +24,8 @@ public interface GameAPIService {
     @GET
     Observable<Flashcard> getFlashcard(@Url String url);
 
-    @GET(APIUtils.URL_GAME_DETAIL)
-    Observable<List<Game>> getGameDetail();
+    @GET
+    Observable<Game> getGameDetail(@Url String url);
 
     @GET(APIUtils.URL_HIGHSCORE)
     Observable<List<Score>> getHighScore();

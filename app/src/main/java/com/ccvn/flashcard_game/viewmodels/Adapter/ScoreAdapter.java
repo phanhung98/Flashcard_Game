@@ -37,7 +37,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     public void onBindViewHolder(@NonNull ScoreViewHolder holder, int position) {
 
         Score currentScore = mScoreList.get(position);
-        holder.bindtto(currentScore);
+        holder.bindDataToView(currentScore);
         holder.mRank.setText(String.valueOf(position+1));
 
     }
@@ -60,8 +60,8 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
         mGamename = itemView.findViewById(R.id.tv_gamename);
 
     }
-
-    public void bindtto(Score currentScore){
+    // this is used for binding data to ViewHolder
+    public void bindDataToView(Score currentScore){
 
         mUserName.setText(currentScore.getUsername());
         mGamename.setText(currentScore.getGamename());
