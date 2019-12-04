@@ -61,7 +61,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
     private int position =0;
     private int count = 1;
-    private double score = 0.0;
+    private double score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
         getId();
 
-        nextFlashcard(position);
+        getUrlForNextFlashcard(position);
 
         initview();
 
@@ -110,11 +110,11 @@ public class GamePlayActivity extends AppCompatActivity{
     }
 
     //Set url for next flashcard
-    private void nextFlashcard(int pos){
+    private void getUrlForNextFlashcard(int pos){
 
         String flashcradId = String.valueOf(mFlashcardId.get(pos));
         String url = mGameId + "/" + flashcradId;
-        mGamePlayViewModel.getNextFlashcard(flashcradId);
+        mGamePlayViewModel.getNextFlashcard(url);
 
     }
 
@@ -204,7 +204,7 @@ public class GamePlayActivity extends AppCompatActivity{
         if (position <= mFlashcardId.size()-1){
             count++;
 
-            nextFlashcard(position);
+            getUrlForNextFlashcard(position);
 
             setAnswerOptionDefault();
             showFlashcard();
@@ -258,7 +258,6 @@ public class GamePlayActivity extends AppCompatActivity{
 
             String value = (String) mAnswerOptionOne.getText();
 
-
             if (mAnswerOptionOne.getText().equals(mFlashcard.getRight_answer())){
                 mAnswerOptionOne.setTextColor(Color.GREEN);
                 mAnswerOptionOne.setClickable(false);
@@ -266,7 +265,6 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionTwo.setClickable(false);
                 mAnswerOptionThree.setTextColor(Color.GRAY);
                 mAnswerOptionThree.setClickable(false);
-
 
             }else {
                 mAnswerOptionOne.setTextColor(Color.RED);

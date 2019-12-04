@@ -65,7 +65,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         mRecyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
 
 
-       checkConection();
+       checkConnection();
         return root;
 
 
@@ -128,7 +128,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         }
     }
     // check conection.
-    public void checkConection(){
+    public void checkConnection(){
         if (isOnline()){
            getListGame();
         }else {
