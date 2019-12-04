@@ -23,7 +23,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
    private OnGameListener mOnGameListener;
 
     public GameAdapter(Context context, List<Game> gamelist, OnGameListener onGameListener) {
-        this.mContext = context;
+       mContext = context;
         this.gamelist = gamelist;
         this.mOnGameListener= onGameListener;
     }
@@ -81,7 +81,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
 
             mGamename.setText(currentGame.getName());
 //       txt_flashcard_count.setText("Consist: "+currentGame.getFlashcard_count()+ " Flashcard");
-            Glide.with(GameAdapter.mContext).load(currentGame.getThumbnail()).into(mGameImage);
+            Glide.with(GameAdapter.mContext).load(currentGame.getUpload_path()).into(mGameImage);
         }
 
 

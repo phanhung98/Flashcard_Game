@@ -10,7 +10,6 @@ import com.ccvn.flashcard_game.models.Flashcard;
 import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 
-import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -20,29 +19,29 @@ import io.reactivex.schedulers.Schedulers;
 public class GamePlayViewModel extends AndroidViewModel {
 
     private GameAPIService mGameAPIService;
-    private MutableLiveData<List<Flashcard>> mFlashcardlist;
+    private MutableLiveData<Flashcard> mFlashcard;
 
     CompositeDisposable compositeDisposable= new CompositeDisposable();
 
     public GamePlayViewModel(@NonNull Application application) {
         super(application);
         mGameAPIService = APIUtils.getAPIService();
-        mFlashcardlist = new MutableLiveData<>();
+        mFlashcard = new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<Flashcard>> getAllFlashcard(){
-        return mFlashcardlist;
+    public MutableLiveData<Flashcard> getAllFlashcard(){
+        return mFlashcard;
     }
 
-    public void getFlashcard(){
+    public void getNextFlashcard(String id){
 
-        compositeDisposable.add(mGameAPIService.getFlashcard()
+        compositeDisposable.add(mGameAPIService.getFlashcard(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Flashcard>>() {
+                .subscribe(new Consumer<Flashcard>() {
                     @Override
-                    public void accept(List<Flashcard> flashcardList) throws Exception {
-                        mFlashcardlist.setValue(flashcardList);
+                    public void accept(Flashcard flashcard) throws Exception {
+                        mFlashcard.setValue(flashcard);
                     }
                 }));
 

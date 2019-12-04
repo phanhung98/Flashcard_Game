@@ -6,19 +6,23 @@
     android:layout_height="match_parent"
     tools:context="com.ccvn.flashcard_game.views.GameDetailActivity">
 
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <TextView
         android:id="@+id/tv_game_name_detail"
+        style="@style/TextviewGameDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="52dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:textSize="40sp"
         android:textStyle="bold"
-        style="@style/TextviewGameDetail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -43,30 +47,30 @@
 
     <TextView
         android:id="@+id/tv_game_highest_score"
+        style="@style/TextviewGameDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:textSize="25sp"
-        style="@style/TextviewGameDetail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_game_name_detail" />
 
     <TextView
         android:id="@+id/tv_flashcard_total"
+        style="@style/TextviewGameDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:textSize="25sp"
-        style="@style/TextviewGameDetail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_game_highest_score" />

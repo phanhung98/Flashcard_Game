@@ -11,5 +11,12 @@
         android:label="@string/menu_listgame"
         tools:layout="@layout/fragment_home" />
 
+    <fragment
+        android:id="@+id/nav_score"
+        android:name="com.ccvn.flashcard_game.views.ScoreFragment"
+        android:label="@string/menu_hightscore"
+        tools:layout="@layout/fragment_home" />
+
+
 
 </navigation>
