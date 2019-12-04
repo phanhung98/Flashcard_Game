@@ -104,4 +104,5 @@ public class GameDetailActivity extends AppCompatActivity {
         startActivity(intent, activityOptions.toBundle());
     }
 
+
 }
