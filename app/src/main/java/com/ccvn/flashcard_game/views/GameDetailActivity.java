@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.models.Game;
 
+import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.viewmodels.GameDetailViewModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class GameDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getIntExtra(ListGameFragment.GAME_ID, 0);
-        mGameDetailViewModel.getGameDetail(String.valueOf(id));
+        mGameDetailViewModel.getGameDetail(APIUtils.URL_GAME_LIST + id);
 
     }
 
