@@ -3,7 +3,9 @@ package com.ccvn.flashcard_game.retrofit;
 public class APIUtils {
 
         public static final String BASE_URL = "http://192.168.1.77:8000/api/";
+        public static final String BASE_URL1 = "https://raw.githubusercontent.com/phanhung98/FakeApi/master/";
         public static final String URL_GAME_LIST = "games/";
+        public static final String URL_GAME_LIST1 = "listgame";
         public static final String URL_HIGHSCORE = "highscore";
 
 
@@ -12,7 +14,7 @@ public class APIUtils {
         }
 
         public static GameAPIService getAPIService(){
-                return APIClient.getInstance(BASE_URL).create(GameAPIService.class);
+                return APIClient.getInstance(BASE_URL1).create(GameAPIService.class);
         }
 
 

@@ -18,7 +18,7 @@ import retrofit2.http.Url;
 
 public interface GameAPIService {
 
-    @GET(APIUtils.URL_GAME_LIST)
+    @GET(APIUtils.URL_GAME_LIST1)
     Observable<List<Game>> getGame();
 
     @GET

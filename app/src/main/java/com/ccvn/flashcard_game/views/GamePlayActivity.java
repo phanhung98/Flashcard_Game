@@ -1,6 +1,7 @@
 package com.ccvn.flashcard_game.views;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -40,9 +42,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GamePlayActivity extends AppCompatActivity{
 
-    private static final int WORD_TYPE = 1;
-    private static final int IMAGE_TYPE = 2;
-    private static final int IMAGE_AND_WORD_TYPE = 3;
+    private static final int RADIO_BOX = 1;
+    private static final int INPUT_TEXT = 2;
+
 
     public List<Integer> mFlashcardId;
     GameAPIService gameAPIService;
@@ -55,7 +57,8 @@ public class GamePlayActivity extends AppCompatActivity{
     ImageView mImageGameplay;
     RadioGroup mRadioGroup;
     RadioButton mAnswerOptionOne, mAnswerOptionTwo, mAnswerOptionThree;
-    Button mNextCard;
+    EditText mInputAnswer;
+    Button mNextCard, mSubmit;
 
     private Flashcard mFlashcard;
 
@@ -81,6 +84,9 @@ public class GamePlayActivity extends AppCompatActivity{
         mImageViewText.setVisibility(View.INVISIBLE);
         mImageGameplay.setVisibility(View.INVISIBLE);
         mQuestion.setVisibility(View.INVISIBLE);
+        mRadioGroup.setVisibility(View.INVISIBLE);
+        mInputAnswer.setVisibility(View.INVISIBLE);
+        mSubmit.setVisibility(View.INVISIBLE);
 
         mNextCard.setVisibility(View.INVISIBLE);
         showFlashcard();
@@ -97,7 +103,10 @@ public class GamePlayActivity extends AppCompatActivity{
         mAnswerOptionThree = findViewById(R.id.radio_button_three);
         mImageViewText = findViewById(R.id.ImageViewText);
         mQuestion = findViewById(R.id.tv_question);
-        mNextCard = findViewById(R.id.btn_submit);
+        mNextCard = findViewById(R.id.btn_next_card);
+        mInputAnswer = findViewById(R.id.inputAnswer);
+        mSubmit = findViewById(R.id.btn_Submit);
+
     }
 
     //Get game Id and flashcard Id
@@ -113,8 +122,9 @@ public class GamePlayActivity extends AppCompatActivity{
     private void getUrlForNextFlashcard(int pos){
 
         String flashcradId = String.valueOf(mFlashcardId.get(pos));
-        String url = APIUtils.URL_GAME_LIST + mGameId + "/" + flashcradId;
-        mGamePlayViewModel.getNextFlashcard(url);
+//        String url = APIUtils.URL_GAME_LIST + mGameId + "/" + flashcradId;
+        String url = mGameId + "/" + flashcradId;
+        mGamePlayViewModel.getNextFlashcard(flashcradId);
 
     }
 
@@ -124,7 +134,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
                 mGamePlayViewModel.getAllFlashcard().observe(GamePlayActivity.this, new Observer<Flashcard>() {
                     @Override
-                    public void onChanged(Flashcard flashcard) {
+                    public void onChanged(final Flashcard flashcard) {
 
                         mScore.setText(getString(R.string.score) +score);
                         mQuestionCount.setText(count + "/" + mFlashcardId.size());
@@ -133,7 +143,7 @@ public class GamePlayActivity extends AppCompatActivity{
                         mAnswerOptionTwo.setText(flashcard.getValue().get(1));
                         mAnswerOptionThree.setText(flashcard.getValue().get(2));
 
-                        if (flashcard.getType_id() == IMAGE_TYPE) {
+                        if (flashcard.getWord() == null) {
 
                             mImageViewText.setVisibility(View.INVISIBLE);
                             mQuestion.setVisibility(View.INVISIBLE);
@@ -143,7 +153,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
                         }
 
-                        if (flashcard.getType_id() == WORD_TYPE){
+                        if (flashcard.getUpload_path() == null){
 
                             mImageGameplay.setVisibility(View.INVISIBLE);
                             mQuestion.setVisibility(View.INVISIBLE);
@@ -153,7 +163,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
                         }
 
-                        if (flashcard.getType_id() == IMAGE_AND_WORD_TYPE){
+                        if (flashcard.getWord() != null && flashcard.getWord() != null){
 
                             mImageGameplay.setVisibility(View.VISIBLE);
                             mQuestion.setVisibility(View.VISIBLE);
@@ -164,30 +174,45 @@ public class GamePlayActivity extends AppCompatActivity{
 
                         }
 
+                        if (flashcard.getType_id() == RADIO_BOX){
 
-                        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                switch (checkedId){
-                                    case R.id.radio_button_one:
+                            mRadioGroup.setVisibility(View.VISIBLE);
+                            mInputAnswer.setVisibility(View.INVISIBLE);
+                            mSubmit.setVisibility(View.INVISIBLE);
 
-                                        getRightAnswer();
+                            mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                    switch (checkedId){
+                                        case R.id.radio_button_one:
+                                        case R.id.radio_button_two:
+                                        case R.id.radio_button_three:
 
-                                        break;
-                                    case R.id.radio_button_two:
+                                            getRightAnswer();
 
-                                        getRightAnswer();
+                                            break;
 
-                                        break;
-
-                                    case R.id.radio_button_three:
-
-                                        getRightAnswer();
-
-                                        break;
+                                    }
                                 }
-                            }
-                        });
+                            });
+
+                        }
+                        if (flashcard.getType_id() == INPUT_TEXT){
+
+                            mRadioGroup.setVisibility(View.INVISIBLE);
+                            mSubmit.setVisibility(View.VISIBLE);
+                            mInputAnswer.setVisibility(View.VISIBLE);
+
+                            mSubmit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    getRightAnswerInputText(flashcard);
+
+                                }
+                            });
+
+                        }
 
                             mFlashcard = flashcard;
                     }
@@ -207,6 +232,7 @@ public class GamePlayActivity extends AppCompatActivity{
             getUrlForNextFlashcard(position);
 
             setAnswerOptionDefault();
+            setInputAnserDefault();
             showFlashcard();
 
             if (position == mFlashcardId.size()-1){
@@ -364,7 +390,44 @@ public class GamePlayActivity extends AppCompatActivity{
 
         mRadioGroup.clearCheck();
 
+    }
+    private void setInputAnserDefault(){
+
+        mInputAnswer.setEnabled(true);
+        mInputAnswer.setText("");
+        mInputAnswer.setTextColor(ContextCompat.getColor(this, R.color.defaultColorText));
+        mSubmit.setEnabled(true);
 
     }
 
+    public void getRightAnswerInputText(Flashcard flashcard){
+
+
+        String answer = mInputAnswer.getText().toString();
+
+        if (flashcard.getRight_answer().equals(answer)){
+
+            mInputAnswer.setTextColor(ContextCompat.getColor(this, R.color.rightColorText));
+            mInputAnswer.setEnabled(false);
+            mSubmit.setEnabled(false);
+            mNextCard.setVisibility(View.VISIBLE);
+
+            score = score + 1;
+            mScore.setText(getString(R.string.score) + score);
+
+        }else {
+
+            mInputAnswer.setTextColor(ContextCompat.getColor(this, R.color.wrongColorText));
+            mInputAnswer.setEnabled(false);
+            mSubmit.setEnabled(false);
+            mNextCard.setVisibility(View.VISIBLE);
+
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
