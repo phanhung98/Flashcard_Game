@@ -61,8 +61,7 @@ public class GameDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getIntExtra(ListGameFragment.GAME_ID, 0);
-//        mGameDetailViewModel.getGameDetail(APIUtils.URL_GAME_LIST + id);
-        mGameDetailViewModel.getGameDetail(String.valueOf(id));
+        mGameDetailViewModel.getGameDetail(APIUtils.URL_GAME_LIST + id);
 
     }
 
