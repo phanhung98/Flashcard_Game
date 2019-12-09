@@ -11,9 +11,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -29,6 +31,7 @@ import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.GamePlayViewModel;
 
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,18 +59,22 @@ public class GamePlayActivity extends AppCompatActivity{
     RadioGroup mRadioGroup;
     RadioButton mAnswerOptionOne, mAnswerOptionTwo, mAnswerOptionThree;
     Button mNextCard;
+    Chronometer mChronometer;
+    DecimalFormat f;
 
     private Flashcard mFlashcard;
 
     private int position =0;
     private int count = 1;
     private double score = 0;
+    private long time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
+        f = new DecimalFormat("##.##");
         gameAPIService = APIUtils.getAPIService();
 
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
@@ -98,6 +105,7 @@ public class GamePlayActivity extends AppCompatActivity{
         mImageViewText = findViewById(R.id.ImageViewText);
         mQuestion = findViewById(R.id.tv_question);
         mNextCard = findViewById(R.id.btn_submit);
+        mChronometer = findViewById(R.id.time);
     }
 
     //Get game Id and flashcard Id
@@ -113,7 +121,7 @@ public class GamePlayActivity extends AppCompatActivity{
     private void getUrlForNextFlashcard(int pos){
 
         String flashcradId = String.valueOf(mFlashcardId.get(pos));
-        String url = APIUtils.URL_GAME_LIST + mGameId + "/" + flashcradId;
+        String url = APIUtils.URL_FLASHCARD + flashcradId;
         mGamePlayViewModel.getNextFlashcard(url);
 
     }
@@ -126,7 +134,7 @@ public class GamePlayActivity extends AppCompatActivity{
                     @Override
                     public void onChanged(Flashcard flashcard) {
 
-                        mScore.setText(getString(R.string.score) +score);
+                        mScore.setText(getString(R.string.score) + f.format(score));
                         mQuestionCount.setText(count + "/" + mFlashcardId.size());
 
                         mAnswerOptionOne.setText(flashcard.getValue().get(0));
@@ -188,7 +196,8 @@ public class GamePlayActivity extends AppCompatActivity{
                                 }
                             }
                         });
-
+                            mChronometer.setBase(SystemClock.elapsedRealtime());
+                            mChronometer.start();
                             mFlashcard = flashcard;
                     }
                 });
@@ -237,7 +246,7 @@ public class GamePlayActivity extends AppCompatActivity{
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
 
-       mScore.setText("Your score: " + score);
+       mScore.setText("Your score: " + f.format(score));
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -256,8 +265,6 @@ public class GamePlayActivity extends AppCompatActivity{
 
         if (mAnswerOptionOne.isChecked()){
 
-            String value = (String) mAnswerOptionOne.getText();
-
             if (mAnswerOptionOne.getText().equals(mFlashcard.getRight_answer())){
                 mAnswerOptionOne.setTextColor(Color.GREEN);
                 mAnswerOptionOne.setClickable(false);
@@ -265,6 +272,8 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionTwo.setClickable(false);
                 mAnswerOptionThree.setTextColor(Color.GRAY);
                 mAnswerOptionThree.setClickable(false);
+
+                setScore();
 
             }else {
                 mAnswerOptionOne.setTextColor(Color.RED);
@@ -275,19 +284,10 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionThree.setClickable(false);
             }
 
-            if (value.equals(mFlashcard.getRight_answer())){
-                score = score + 1;
-                mScore.setText(getString(R.string.score) + score);
-            }
-
             mNextCard.setVisibility(View.VISIBLE);
 
         }
         if (mAnswerOptionTwo.isChecked()){
-
-            String option = (String) mAnswerOptionTwo.getText();
-
-
 
             if (mAnswerOptionTwo.getText().equals(mFlashcard.getRight_answer())){
                 mAnswerOptionOne.setTextColor(Color.GRAY);
@@ -296,6 +296,8 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionTwo.setClickable(false);
                 mAnswerOptionThree.setTextColor(Color.GRAY);
                 mAnswerOptionThree.setClickable(false);
+
+                setScore();
 
             }else {
                 mAnswerOptionOne.setTextColor(Color.GRAY);
@@ -306,18 +308,10 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionThree.setClickable(false);
             }
 
-            if (option.equals(mFlashcard.getRight_answer())){
-                score = score + 1;
-                mScore.setText(getString(R.string.score) + score);
-            }
             mNextCard.setVisibility(View.VISIBLE);
 
         }
         if (mAnswerOptionThree.isChecked()){
-
-            String val = (String) mAnswerOptionThree.getText();
-
-
 
             if (mAnswerOptionThree.getText().equals(mFlashcard.getRight_answer())){
                 mAnswerOptionOne.setTextColor(Color.GRAY);
@@ -326,6 +320,8 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionTwo.setClickable(false);
                 mAnswerOptionThree.setTextColor(Color.GREEN);
                 mAnswerOptionThree.setClickable(false);
+
+                setScore();
 
             }else {
 
@@ -338,15 +334,16 @@ public class GamePlayActivity extends AppCompatActivity{
 
             }
 
-            if (val.equals(mFlashcard.getRight_answer())){
-                score = score + 1;
-                mScore.setText(getString(R.string.score) + score);
-            }
             mNextCard.setVisibility(View.VISIBLE);
 
         }
+    }
 
+    private void setScore() {
 
+        time = (SystemClock.elapsedRealtime() - mChronometer.getBase())/1000;
+        score = score + Math.round((0.01 + Math.pow(0.99, time)) * 100.0)/100.0;
+        mScore.setText(getString(R.string.score) + f.format(score));
 
     }
 
