@@ -39,6 +39,7 @@
         android:layout_below="@+id/tv_question"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:elevation="5dp"
         android:id="@+id/image_detail"
         android:layout_width="250dp"
         android:layout_height="250dp"/>
@@ -93,21 +94,23 @@
     <EditText
         android:id="@+id/inputAnswer"
         android:layout_alignLeft="@+id/radio_group"
-        android:layout_alignRight="@+id/radio_group"
         android:layout_alignBottom="@+id/radio_group"
-        android:layout_marginBottom="100dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_marginBottom="40dp"
+        android:hint="@string/type_your_answer_here"
+        android:background="@drawable/rounded_edittext"
+        android:layout_width="210dp"
+        android:layout_height="50dp"/>
     <Button
         android:id="@+id/btn_Submit"
         android:text="Submit"
-        android:layout_alignLeft="@+id/radio_group"
-        android:layout_alignRight="@+id/radio_group"
+        android:layout_toRightOf="@+id/inputAnswer"
         android:layout_alignBottom="@+id/radio_group"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="5dp"
         android:background="@drawable/click_button_style"
         android:textColor="#FF4A10"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"/>
+        android:layout_width="80dp"
+        android:layout_height="50dp"/>
 
     <Button
         android:layout_below="@+id/radio_group"

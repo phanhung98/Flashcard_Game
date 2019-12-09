@@ -137,9 +137,6 @@ public class GamePlayActivity extends AppCompatActivity{
                         mScore.setText(getString(R.string.score) +score);
                         mQuestionCount.setText(count + "/" + mFlashcardId.size());
 
-                        mAnswerOptionOne.setText(flashcard.getValue().get(0));
-                        mAnswerOptionTwo.setText(flashcard.getValue().get(1));
-                        mAnswerOptionThree.setText(flashcard.getValue().get(2));
 
                         if (flashcard.getWord() == null) {
 
@@ -173,6 +170,10 @@ public class GamePlayActivity extends AppCompatActivity{
                         }
 
                         if (flashcard.getType_id() == RADIO_BOX){
+
+                            mAnswerOptionOne.setText(flashcard.getValue().get(0));
+                            mAnswerOptionTwo.setText(flashcard.getValue().get(1));
+                            mAnswerOptionThree.setText(flashcard.getValue().get(2));
 
                             mRadioGroup.setVisibility(View.VISIBLE);
                             mInputAnswer.setVisibility(View.INVISIBLE);
