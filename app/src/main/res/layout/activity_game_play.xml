@@ -6,10 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.ccvn.flashcard_game.views.GamePlayActivity">
 
-<!--    <include-->
-<!--        android:id="@+id/toolbar"-->
-<!--        layout="@layout/toolbar"-->
-<!--        />-->
+
 
     <TextView
         android:id="@+id/tv_score"
@@ -107,6 +104,8 @@
         android:layout_alignLeft="@+id/radio_group"
         android:layout_alignRight="@+id/radio_group"
         android:layout_alignBottom="@+id/radio_group"
+        android:background="@drawable/click_button_style"
+        android:textColor="#FF4A10"
         android:layout_width="100dp"
         android:layout_height="wrap_content"/>
 

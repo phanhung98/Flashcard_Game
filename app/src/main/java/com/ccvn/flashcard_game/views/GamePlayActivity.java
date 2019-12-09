@@ -128,7 +128,6 @@ public class GamePlayActivity extends AppCompatActivity{
 
     }
 
-
     //Show flashcard
     public void showFlashcard(){
 
@@ -189,9 +188,7 @@ public class GamePlayActivity extends AppCompatActivity{
                                         case R.id.radio_button_three:
 
                                             getRightAnswer();
-
                                             break;
-
                                     }
                                 }
                             });
@@ -206,18 +203,18 @@ public class GamePlayActivity extends AppCompatActivity{
                             mSubmit.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    if (mInputAnswer.getText().length() == 0){
 
-                                    getRightAnswerInputText(flashcard);
-
+                                        mInputAnswer.setError("Please input your answer");
+                                    }else {
+                                        getRightAnswerInputText(flashcard);
+                                    }
                                 }
                             });
-
                         }
-
                             mFlashcard = flashcard;
                     }
                 });
-
     }
 
     //click next flashcard button
@@ -279,7 +276,6 @@ public class GamePlayActivity extends AppCompatActivity{
    // get right answer
     public void getRightAnswer(){
 
-
         if (mAnswerOptionOne.isChecked()){
 
             String value = (String) mAnswerOptionOne.getText();
@@ -313,8 +309,6 @@ public class GamePlayActivity extends AppCompatActivity{
 
             String option = (String) mAnswerOptionTwo.getText();
 
-
-
             if (mAnswerOptionTwo.getText().equals(mFlashcard.getRight_answer())){
                 mAnswerOptionOne.setTextColor(Color.GRAY);
                 mAnswerOptionOne.setClickable(false);
@@ -343,8 +337,6 @@ public class GamePlayActivity extends AppCompatActivity{
 
             String val = (String) mAnswerOptionThree.getText();
 
-
-
             if (mAnswerOptionThree.getText().equals(mFlashcard.getRight_answer())){
                 mAnswerOptionOne.setTextColor(Color.GRAY);
                 mAnswerOptionOne.setClickable(false);
@@ -371,8 +363,6 @@ public class GamePlayActivity extends AppCompatActivity{
             mNextCard.setVisibility(View.VISIBLE);
 
         }
-
-
 
     }
 
@@ -401,7 +391,6 @@ public class GamePlayActivity extends AppCompatActivity{
     }
 
     public void getRightAnswerInputText(Flashcard flashcard){
-
 
         String answer = mInputAnswer.getText().toString();
 
