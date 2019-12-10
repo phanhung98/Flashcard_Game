@@ -14,8 +14,8 @@
     <Button
         android:id="@+id/btn_dialog"
         android:layout_margin="20dp"
-        android:background="@drawable/button_style"
-        android:textColor="#FA71CD"
+        android:background="@drawable/click_button_style"
+        android:textColor="@android:color/white"
         android:layout_gravity="center"
         android:text="OK"
         android:layout_width="wrap_content"
