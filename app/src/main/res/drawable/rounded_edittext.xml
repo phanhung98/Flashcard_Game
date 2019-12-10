@@ -3,8 +3,6 @@
     android:thickness="0dp"
     android:shape="rectangle">
 
-    <stroke android:width="2dp"
-        android:color="#2F6699"/>
 
     <corners android:radius="3dp" />
 
@@ -14,8 +12,4 @@
         android:right="7dip"
         android:top="7dip" />
 
-    <gradient   android:startColor="#C8C8C8"
-        android:endColor="#FFFFFF"
-        android:type="linear"
-        android:angle="270"/>
 </shape>

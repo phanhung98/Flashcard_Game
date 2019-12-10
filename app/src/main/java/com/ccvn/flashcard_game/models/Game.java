@@ -6,7 +6,7 @@ public class Game {
 
     private int id;
     private String name;
-    private int score;
+    private double score;
     private String upload_path;
     private int flashcard_total;
     private List<Integer> flashcard_id = null;
@@ -28,11 +28,11 @@ public class Game {
         this.name = name;
     }
 
-    public int getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
     }
 
