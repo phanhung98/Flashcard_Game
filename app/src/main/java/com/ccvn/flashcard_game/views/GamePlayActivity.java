@@ -6,39 +6,41 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
+
 import android.content.Context;
-import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+
+import android.widget.Chronometer;
+
 import android.widget.EditText;
+
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.bumptech.glide.Glide;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.models.Flashcard;
-import com.ccvn.flashcard_game.models.Score;
+
 import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.GamePlayViewModel;
 
 
-import java.util.ArrayList;
+import java.text.DecimalFormat;
+
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class GamePlayActivity extends AppCompatActivity{
 
@@ -57,20 +59,28 @@ public class GamePlayActivity extends AppCompatActivity{
     ImageView mImageGameplay;
     RadioGroup mRadioGroup;
     RadioButton mAnswerOptionOne, mAnswerOptionTwo, mAnswerOptionThree;
+
+    Button mNextCard;
+    Chronometer mChronometer;
+    DecimalFormat f;
+
     EditText mInputAnswer;
-    Button mNextCard, mSubmit;
+    Button mSubmit;
+
 
     private Flashcard mFlashcard;
 
     private int position =0;
     private int count = 1;
     private double score = 0;
+    private long time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
+        f = new DecimalFormat("##.##");
         gameAPIService = APIUtils.getAPIService();
 
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
@@ -103,9 +113,14 @@ public class GamePlayActivity extends AppCompatActivity{
         mAnswerOptionThree = findViewById(R.id.radio_button_three);
         mImageViewText = findViewById(R.id.ImageViewText);
         mQuestion = findViewById(R.id.tv_question);
+
+        mSubmit = findViewById(R.id.btn_Submit);
+        mChronometer = findViewById(R.id.time);
+
         mNextCard = findViewById(R.id.btn_next_card);
         mInputAnswer = findViewById(R.id.inputAnswer);
         mSubmit = findViewById(R.id.btn_Submit);
+
 
     }
 
@@ -134,9 +149,11 @@ public class GamePlayActivity extends AppCompatActivity{
                     @Override
                     public void onChanged(final Flashcard flashcard) {
 
-                        mScore.setText(getString(R.string.score) +score);
+                        mScore.setText(getString(R.string.score) + f.format(score));
                         mQuestionCount.setText(count + "/" + mFlashcardId.size());
 
+                        mChronometer.setBase(SystemClock.elapsedRealtime());
+                        mChronometer.start();
 
                         if (flashcard.getWord() == null) {
 
@@ -148,7 +165,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
                         }
 
-                        if (flashcard.getUpload_path() == null){
+                        if (flashcard.getUpload_path() == null) {
 
                             mImageGameplay.setVisibility(View.INVISIBLE);
                             mQuestion.setVisibility(View.INVISIBLE);
@@ -158,18 +175,18 @@ public class GamePlayActivity extends AppCompatActivity{
 
                         }
 
-                        if (flashcard.getWord() != null && flashcard.getWord() != null){
+                        if (flashcard.getWord() != null && flashcard.getWord() != null) {
 
                             mImageGameplay.setVisibility(View.VISIBLE);
                             mQuestion.setVisibility(View.VISIBLE);
                             mImageViewText.setVisibility(View.INVISIBLE);
 
-                            mQuestion.setText(flashcard.getWord()+"?");
+                            mQuestion.setText(flashcard.getWord() + "?");
                             Glide.with(GamePlayActivity.this).load(flashcard.getUpload_path()).into(mImageGameplay);
 
                         }
 
-                        if (flashcard.getType_id() == RADIO_BOX){
+                        if (flashcard.getType_id() == RADIO_BOX) {
 
                             mAnswerOptionOne.setText(flashcard.getValue().get(0));
                             mAnswerOptionTwo.setText(flashcard.getValue().get(1));
@@ -182,7 +199,7 @@ public class GamePlayActivity extends AppCompatActivity{
                             mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                    switch (checkedId){
+                                    switch (checkedId) {
                                         case R.id.radio_button_one:
                                         case R.id.radio_button_two:
                                         case R.id.radio_button_three:
@@ -194,7 +211,7 @@ public class GamePlayActivity extends AppCompatActivity{
                             });
 
                         }
-                        if (flashcard.getType_id() == INPUT_TEXT){
+                        if (flashcard.getType_id() == INPUT_TEXT) {
 
                             mRadioGroup.setVisibility(View.INVISIBLE);
                             mSubmit.setVisibility(View.VISIBLE);
@@ -203,16 +220,19 @@ public class GamePlayActivity extends AppCompatActivity{
                             mSubmit.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (mInputAnswer.getText().length() == 0){
+                                    if (mInputAnswer.getText().length() == 0) {
 
                                         mInputAnswer.setError("Please input your answer");
-                                    }else {
+                                    } else {
+                                        mChronometer.stop();
                                         getRightAnswerInputText(flashcard);
                                     }
+
                                 }
                             });
                         }
-                            mFlashcard = flashcard;
+
+                        mFlashcard = flashcard;
                     }
                 });
     }
@@ -260,7 +280,7 @@ public class GamePlayActivity extends AppCompatActivity{
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
 
-       mScore.setText("Your score: " + score);
+       mScore.setText("Your score: " + f.format(score));
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,8 +298,6 @@ public class GamePlayActivity extends AppCompatActivity{
 
         if (mAnswerOptionOne.isChecked()){
 
-            String value = (String) mAnswerOptionOne.getText();
-
             if (mAnswerOptionOne.getText().equals(mFlashcard.getRight_answer())){
                 mAnswerOptionOne.setTextColor(Color.GREEN);
                 mAnswerOptionOne.setClickable(false);
@@ -288,6 +306,8 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionThree.setTextColor(Color.GRAY);
                 mAnswerOptionThree.setClickable(false);
 
+                setScore();
+
             }else {
                 mAnswerOptionOne.setTextColor(Color.RED);
                 mAnswerOptionOne.setClickable(false);
@@ -295,19 +315,13 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionTwo.setClickable(false);
                 mAnswerOptionThree.setTextColor(Color.GRAY);
                 mAnswerOptionThree.setClickable(false);
-            }
-
-            if (value.equals(mFlashcard.getRight_answer())){
-                score = score + 1;
-                mScore.setText(getString(R.string.score) + score);
+                mChronometer.stop();
             }
 
             mNextCard.setVisibility(View.VISIBLE);
 
         }
         if (mAnswerOptionTwo.isChecked()){
-
-            String option = (String) mAnswerOptionTwo.getText();
 
             if (mAnswerOptionTwo.getText().equals(mFlashcard.getRight_answer())){
                 mAnswerOptionOne.setTextColor(Color.GRAY);
@@ -317,6 +331,8 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionThree.setTextColor(Color.GRAY);
                 mAnswerOptionThree.setClickable(false);
 
+                setScore();
+
             }else {
                 mAnswerOptionOne.setTextColor(Color.GRAY);
                 mAnswerOptionOne.setClickable(false);
@@ -324,18 +340,13 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionTwo.setClickable(false);
                 mAnswerOptionThree.setTextColor(Color.GRAY);
                 mAnswerOptionThree.setClickable(false);
+                mChronometer.stop();
             }
 
-            if (option.equals(mFlashcard.getRight_answer())){
-                score = score + 1;
-                mScore.setText(getString(R.string.score) + score);
-            }
             mNextCard.setVisibility(View.VISIBLE);
 
         }
         if (mAnswerOptionThree.isChecked()){
-
-            String val = (String) mAnswerOptionThree.getText();
 
             if (mAnswerOptionThree.getText().equals(mFlashcard.getRight_answer())){
                 mAnswerOptionOne.setTextColor(Color.GRAY);
@@ -345,6 +356,8 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionThree.setTextColor(Color.GREEN);
                 mAnswerOptionThree.setClickable(false);
 
+                setScore();
+
             }else {
 
                 mAnswerOptionOne.setTextColor(Color.GRAY);
@@ -353,16 +366,24 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionTwo.setClickable(false);
                 mAnswerOptionThree.setTextColor(Color.RED);
                 mAnswerOptionThree.setClickable(false);
+                mChronometer.stop();
 
             }
 
-            if (val.equals(mFlashcard.getRight_answer())){
-                score = score + 1;
-                mScore.setText(getString(R.string.score) + score);
-            }
             mNextCard.setVisibility(View.VISIBLE);
 
         }
+    }
+
+
+    private void setScore() {
+
+        mChronometer.stop();
+        time = (SystemClock.elapsedRealtime() - mChronometer.getBase())/1000;
+        Log.d("BBB", String.valueOf(time));
+        score = score + Math.round((0.01 + Math.pow(0.99, time)) * 100.0)/100.0;
+        Log.d("BBB", String.valueOf(score));
+        mScore.setText(getString(R.string.score) + f.format(score));
 
     }
 
@@ -401,8 +422,7 @@ public class GamePlayActivity extends AppCompatActivity{
             mSubmit.setEnabled(false);
             mNextCard.setVisibility(View.VISIBLE);
 
-            score = score + 1;
-            mScore.setText(getString(R.string.score) + score);
+           setScore();
 
         }else {
 
