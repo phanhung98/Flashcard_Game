@@ -7,7 +7,6 @@ public class APIUtils {
         public static final String URL_FLASHCARD = "flashcards/";
         public static final String URL_HIGHSCORE = "highscore";
 
-
         private APIUtils(){
 
         }
@@ -15,6 +14,5 @@ public class APIUtils {
         public static GameAPIService getAPIService(){
                 return APIClient.getInstance(BASE_URL).create(GameAPIService.class);
         }
-
 
 }
