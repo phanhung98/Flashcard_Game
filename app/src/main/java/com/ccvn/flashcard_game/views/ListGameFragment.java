@@ -114,8 +114,6 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
             intent.putExtra(GAME_ID, id);
 
             startActivity(intent);
-
-
     }
     // check online or not.
     protected boolean isOnline(){

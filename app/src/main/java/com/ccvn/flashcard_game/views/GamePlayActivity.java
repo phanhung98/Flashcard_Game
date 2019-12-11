@@ -254,7 +254,6 @@ public class GamePlayActivity extends AppCompatActivity{
         final TextView mScore = view.findViewById(R.id.dialog_score);
         Button mConfirm = view.findViewById(R.id.btn_dialog);
 
-        Context context;
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Congratulation!");
         alertDialog.setView(view);
