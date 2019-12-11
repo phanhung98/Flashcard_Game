@@ -3,13 +3,10 @@ package com.ccvn.flashcard_game.retrofit;
 import com.ccvn.flashcard_game.models.Flashcard;
 import com.ccvn.flashcard_game.models.Game;
 import com.ccvn.flashcard_game.models.Score;
-import com.ccvn.flashcard_game.views.GamePlayActivity;
 
-import java.io.File;
 import java.util.List;
 
 import io.reactivex.Observable;
-import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -30,7 +27,7 @@ public interface GameAPIService {
     @GET(APIUtils.URL_HIGHSCORE)
     Observable<List<Score>> getHighScore();
 
-    @POST("post")
+    @POST()
     @FormUrlEncoded
     Observable<Score> insertScore(@Field("user") String user,
                                     @Field("score") double score,

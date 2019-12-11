@@ -86,8 +86,8 @@
         android:layout_marginBottom="24dp"
         android:onClick="show_game_play"
         android:text="@string/button_play"
-        android:textColor="#FA71CD"
-        android:background="@drawable/button_style"
+        android:textColor="@android:color/white"
+        android:background="@drawable/click_button_style"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.ccvn.flashcard_game.views.GamePlayActivity">
 
-
     <TextView
         android:id="@+id/tv_score"
         android:layout_margin="15dp"
@@ -97,16 +96,36 @@
 
     </RadioGroup>
 
+    <EditText
+        android:id="@+id/inputAnswer"
+        android:layout_alignLeft="@+id/radio_group"
+        android:layout_alignBottom="@+id/radio_group"
+        android:layout_marginBottom="40dp"
+        android:hint="@string/type_your_answer_here"
+        android:layout_width="220dp"
+        android:layout_height="50dp"/>
+    <Button
+        android:id="@+id/btn_Submit"
+        android:text="Submit"
+        android:layout_toRightOf="@+id/inputAnswer"
+        android:layout_alignBottom="@+id/radio_group"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/click_button_style"
+        android:layout_width="60dp"
+        android:layout_height="40dp"/>
+
     <Button
         android:layout_below="@+id/radio_group"
         android:layout_marginTop="40dp"
         android:layout_centerHorizontal="true"
         android:text="@string/nextcard_button"
-        android:id="@+id/btn_submit"
-        android:background="@drawable/button_style"
-        android:textColor="#FA71CD"
+        android:id="@+id/btn_next_card"
+        android:background="@drawable/click_button_style"
+        android:textColor="@android:color/white"
         android:onClick="nextCard"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="40dp"/>
 
 </RelativeLayout>
