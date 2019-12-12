@@ -409,12 +409,9 @@ public class GamePlayActivity extends AppCompatActivity{
 
     // get total time play game
     private void getTotalTime(){
-
         mChronometer.stop();
         time = ((SystemClock.elapsedRealtime() - mChronometer.getBase())/1000);
-        Toast.makeText(this, ""+time, Toast.LENGTH_SHORT).show();
         totalTime = totalTime + time;
-        Log.d("BB", totalTime+"");
     }
 
     // Set radio button to default
