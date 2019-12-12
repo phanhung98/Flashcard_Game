@@ -10,15 +10,14 @@
         android:id="@+id/tv_score"
         android:layout_margin="15dp"
         android:textSize="22sp"
-        android:layout_below="@+id/toolbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
     <TextView
         android:id="@+id/tv_count_question"
         android:layout_margin="15dp"
         android:layout_alignParentRight="true"
         android:textSize="22sp"
-        android:layout_below="@+id/toolbar"
         android:text="@string/question_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

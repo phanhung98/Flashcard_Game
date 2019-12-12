@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -26,9 +27,11 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
+import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.models.Flashcard;
 
@@ -41,12 +44,16 @@ import java.text.DecimalFormat;
 
 import java.util.List;
 
+import static com.ccvn.flashcard_game.views.ListGameFragment.AGE;
+import static com.ccvn.flashcard_game.views.ListGameFragment.NAME;
+import static com.ccvn.flashcard_game.views.ListGameFragment.SEX;
+import static com.ccvn.flashcard_game.views.ListGameFragment.USERINFO;
+
 
 public class GamePlayActivity extends AppCompatActivity{
 
     private static final int RADIO_BOX = 1;
     private static final int INPUT_TEXT = 2;
-
 
     public List<Integer> mFlashcardId;
     GameAPIService gameAPIService;
@@ -74,6 +81,7 @@ public class GamePlayActivity extends AppCompatActivity{
     private int count = 1;
     private double score = 0;
     private long time;
+    private double totalTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,9 +160,6 @@ public class GamePlayActivity extends AppCompatActivity{
                         mScore.setText(getString(R.string.score) + f.format(score));
                         mQuestionCount.setText(count + "/" + mFlashcardId.size());
 
-                        mChronometer.setBase(SystemClock.elapsedRealtime());
-                        mChronometer.start();
-
                         if (flashcard.getWord() == null) {
 
                             mImageViewText.setVisibility(View.INVISIBLE);
@@ -224,15 +229,16 @@ public class GamePlayActivity extends AppCompatActivity{
 
                                         mInputAnswer.setError("Please input your answer");
                                     } else {
-                                        mChronometer.stop();
                                         getRightAnswerInputText(flashcard);
                                     }
-
                                 }
                             });
                         }
-
                         mFlashcard = flashcard;
+                        if (position == 0) {
+                            mChronometer.setBase(SystemClock.elapsedRealtime());
+                            mChronometer.start();
+                        }
                     }
                 });
     }
@@ -251,6 +257,8 @@ public class GamePlayActivity extends AppCompatActivity{
             setAnswerOptionDefault();
             setInputAnserDefault();
             showFlashcard();
+            mChronometer.setBase(SystemClock.elapsedRealtime());
+            mChronometer.start();
 
             if (position == mFlashcardId.size()-1){
                 mNextCard.setText("Finish");
@@ -262,7 +270,18 @@ public class GamePlayActivity extends AppCompatActivity{
         }
     }
 
+
     private void insertScore() {
+
+        if (Common.currentUser == null){
+
+            SharedPreferences preferences = getSharedPreferences(USERINFO, Context.MODE_PRIVATE);
+            String name = preferences.getString(NAME, "");
+            int age = preferences.getInt(AGE, 0);
+            String sex = preferences.getString(SEX, "");
+            int gameId = Common.currentGame.getId();
+
+        }
 
     }
 
@@ -306,6 +325,7 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionThree.setClickable(false);
 
                 setScore();
+                getTotalTime();
 
             }else {
                 mAnswerOptionOne.setTextColor(Color.RED);
@@ -314,7 +334,8 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionTwo.setClickable(false);
                 mAnswerOptionThree.setTextColor(Color.GRAY);
                 mAnswerOptionThree.setClickable(false);
-                mChronometer.stop();
+
+                getTotalTime();
             }
 
             mNextCard.setVisibility(View.VISIBLE);
@@ -330,7 +351,7 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionThree.setTextColor(Color.GRAY);
                 mAnswerOptionThree.setClickable(false);
 
-                setScore();
+                getTotalTime();
 
             }else {
                 mAnswerOptionOne.setTextColor(Color.GRAY);
@@ -339,7 +360,8 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionTwo.setClickable(false);
                 mAnswerOptionThree.setTextColor(Color.GRAY);
                 mAnswerOptionThree.setClickable(false);
-                mChronometer.stop();
+
+                getTotalTime();
             }
 
             mNextCard.setVisibility(View.VISIBLE);
@@ -356,6 +378,7 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionThree.setClickable(false);
 
                 setScore();
+                getTotalTime();
 
             }else {
 
@@ -366,6 +389,7 @@ public class GamePlayActivity extends AppCompatActivity{
                 mAnswerOptionThree.setTextColor(Color.RED);
                 mAnswerOptionThree.setClickable(false);
                 mChronometer.stop();
+                getTotalTime();
 
             }
 
@@ -374,16 +398,23 @@ public class GamePlayActivity extends AppCompatActivity{
         }
     }
 
-
+    // set score for each flashcard
     private void setScore() {
 
         mChronometer.stop();
         time = (SystemClock.elapsedRealtime() - mChronometer.getBase())/1000;
-        Log.d("BBB", String.valueOf(time));
         score = score + Math.round((0.01 + Math.pow(0.99, time)) * 100.0)/100.0;
-        Log.d("BBB", String.valueOf(score));
         mScore.setText(getString(R.string.score) + f.format(score));
+    }
 
+    // get total time play game
+    private void getTotalTime(){
+
+        mChronometer.stop();
+        time = ((SystemClock.elapsedRealtime() - mChronometer.getBase())/1000);
+        Toast.makeText(this, ""+time, Toast.LENGTH_SHORT).show();
+        totalTime = totalTime + time;
+        Log.d("BB", totalTime+"");
     }
 
     // Set radio button to default
@@ -422,6 +453,7 @@ public class GamePlayActivity extends AppCompatActivity{
             mNextCard.setVisibility(View.VISIBLE);
 
            setScore();
+           getTotalTime();
 
         }else {
 
@@ -429,6 +461,8 @@ public class GamePlayActivity extends AppCompatActivity{
             mInputAnswer.setEnabled(false);
             mSubmit.setEnabled(false);
             mNextCard.setVisibility(View.VISIBLE);
+
+            getTotalTime();
 
         }
 
