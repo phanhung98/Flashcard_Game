@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
+import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.models.Game;
 
@@ -54,7 +55,6 @@ public class GameDetailActivity extends AppCompatActivity {
         initview();
         getGameId();
         showGameDetail();
-
     }
 
     public void getGameId(){
@@ -62,9 +62,7 @@ public class GameDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         id = intent.getIntExtra(ListGameFragment.GAME_ID, 0);
         mGameDetailViewModel.getGameDetail(APIUtils.URL_GAME_LIST + id);
-
     }
-
     private void showGameDetail() {
 
         mGameDetailViewModel.getAllGamedetail().observe(GameDetailActivity.this, new Observer<Game>() {
@@ -78,9 +76,9 @@ public class GameDetailActivity extends AppCompatActivity {
 
                 mListFlashcardId = game.getFlashcard_id();
 
+                Common.currentGame = game;
             }
         });
-
     }
 
     private void initview() {
@@ -89,7 +87,6 @@ public class GameDetailActivity extends AppCompatActivity {
         mHighestScore = findViewById(R.id.tv_game_highest_score);
         mFlashcardTotal=findViewById(R.id.tv_flashcard_total);
         mImageDetail = findViewById(R.id.image_detail);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -104,6 +101,4 @@ public class GameDetailActivity extends AppCompatActivity {
                 share_image, "image");
         startActivity(intent, activityOptions.toBundle());
     }
-
-
 }

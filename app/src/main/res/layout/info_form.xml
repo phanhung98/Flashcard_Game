@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/title"
+        android:text="Information"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:background="@drawable/background_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <ImageButton
+        android:id="@+id/cancel"
+        android:layout_alignRight="@+id/title"
+        android:layout_margin="5dp"
+        android:src="@drawable/ic_cancel_black_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edt_name"
+        android:layout_below="@+id/cancel"
+        android:layout_width="300dp"
+        android:textSize="20sp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="15dp"
+        android:inputType="text"
+        android:hint="Name"
+        android:background="@drawable/rounded_edittext"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/edt_age"
+        android:layout_below="@+id/edt_name"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="15dp"
+        android:layout_width="300dp"
+        android:textSize="20sp"
+        android:inputType="number"
+        android:hint="Age"
+        android:background="@drawable/rounded_edittext"
+        android:layout_height="wrap_content"/>
+
+   <RadioGroup
+       android:id="@+id/rd_sex"
+       android:layout_marginTop="15dp"
+       android:layout_marginLeft="52dp"
+       android:layout_below="@+id/edt_age"
+       android:orientation="horizontal"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content">
+
+       <RadioButton
+           android:id="@+id/male"
+           android:text="Male"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"/>
+
+       <RadioButton
+           android:id="@+id/female"
+           android:text="Female"
+           android:layout_marginLeft="15dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"/>
+
+   </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_comfirm"
+        android:layout_below="@id/rd_sex"
+        android:text="Save"
+        android:background="@drawable/click_button_style"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/white"
+        android:layout_width="150dp"
+        android:layout_height="40dp"/>
+
+</RelativeLayout>
