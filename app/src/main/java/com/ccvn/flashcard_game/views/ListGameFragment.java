@@ -1,8 +1,7 @@
 package com.ccvn.flashcard_game.views;
 
-import android.app.ActivityOptions;
-import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -18,9 +17,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -33,14 +34,13 @@ import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.Adapter.GameAdapter;
 import com.ccvn.flashcard_game.viewmodels.ListGameViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.dialog.MaterialDialogs;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 
 @SuppressWarnings("ALL")
@@ -154,18 +154,13 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         final RadioButton mMale = view.findViewById(R.id.male);
         final RadioButton mFemale = view.findViewById(R.id.female);
 
-        Button mSave = view.findViewById(R.id.btn_comfirm);
-        ImageButton mCancel = view.findViewById(R.id.cancel);
+        final AlertDialog.Builder mDialog = new MaterialAlertDialogBuilder(getContext())
+                .setView(view)
+                .setCancelable(false);
+        final AlertDialog alertDialog = mDialog.create();
+        alertDialog.show();
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-        alertDialog.setTitle("Congratulation!");
-        alertDialog.setView(view);
-        alertDialog.setCancelable(false);
-        final AlertDialog dialog = alertDialog.create();
-        dialog.show();
-
-
-        mSave.setOnClickListener(new View.OnClickListener() {
+        alertDialog.findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -188,20 +183,21 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
                     editor.apply();
 
                     Toast.makeText(getContext(), "You can play now!", Toast.LENGTH_SHORT).show();
+                    alertDialog.dismiss();
 
                 }else {
                     Toast.makeText(getContext(), "Please fill information!", Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
-        mCancel.setOnClickListener(new View.OnClickListener() {
+        alertDialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                   dialog.dismiss();
+                alertDialog.dismiss();
             }
         });
-
 
     }
 

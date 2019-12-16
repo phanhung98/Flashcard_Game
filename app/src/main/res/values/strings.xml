@@ -39,5 +39,12 @@
     <string name="Gamename">Game</string>
     <string name="high_score">High Score</string>
     <string name="type_your_answer_here">Type your answer here</string>
+    <string name="name_hint_text">Name</string>
+    <string name="age_hint_text">Age</string>
+    <string name="save_button">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="submit">Submit</string>
 
 </resources>
