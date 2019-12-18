@@ -14,7 +14,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -81,7 +81,7 @@ public class GamePlayActivity extends AppCompatActivity{
     private int count = 1;
     private double score = 0;
     private long time;
-    private double totalTime = 0;
+    private int totalTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +105,8 @@ public class GamePlayActivity extends AppCompatActivity{
         mRadioGroup.setVisibility(View.INVISIBLE);
         mInputAnswer.setVisibility(View.INVISIBLE);
         mSubmit.setVisibility(View.INVISIBLE);
-
         mNextCard.setVisibility(View.INVISIBLE);
+
         showFlashcard();
 
     }
@@ -128,7 +128,6 @@ public class GamePlayActivity extends AppCompatActivity{
         mNextCard = findViewById(R.id.btn_next_card);
         mInputAnswer = findViewById(R.id.inputAnswer);
         mSubmit = findViewById(R.id.btn_Submit);
-
 
     }
 
@@ -265,23 +264,36 @@ public class GamePlayActivity extends AppCompatActivity{
             }
         }else {
             insertScore();
-            scoreDialog();
-
         }
     }
 
-
+    //Insert score to database
     private void insertScore() {
 
         if (Common.currentUser == null){
-
             SharedPreferences preferences = getSharedPreferences(USERINFO, Context.MODE_PRIVATE);
             String name = preferences.getString(NAME, "");
             int age = preferences.getInt(AGE, 0);
             String sex = preferences.getString(SEX, "");
             int gameId = Common.currentGame.getId();
 
+            mGamePlayViewModel.storeScore(gameId, score, totalTime, name, age, sex);
+            storeScore();
         }
+    }
+
+    public void storeScore(){
+
+        mGamePlayViewModel.getmSuccess().observe(GamePlayActivity.this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                    if (s.equals("success")){
+                        scoreDialog();
+                    }else {
+                        Toast.makeText(GamePlayActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    }
+            }
+        });
 
     }
 
@@ -411,7 +423,7 @@ public class GamePlayActivity extends AppCompatActivity{
     private void getTotalTime(){
         mChronometer.stop();
         time = ((SystemClock.elapsedRealtime() - mChronometer.getBase())/1000);
-        totalTime = totalTime + time;
+        totalTime = (int) (totalTime + time);
     }
 
     // Set radio button to default
@@ -429,6 +441,8 @@ public class GamePlayActivity extends AppCompatActivity{
         mRadioGroup.clearCheck();
 
     }
+
+    // Set input text default
     private void setInputAnserDefault(){
 
         mInputAnswer.setEnabled(true);

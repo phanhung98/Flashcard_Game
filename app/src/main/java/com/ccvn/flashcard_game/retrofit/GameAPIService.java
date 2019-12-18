@@ -27,12 +27,13 @@ public interface GameAPIService {
     @GET(APIUtils.URL_HIGHSCORE)
     Observable<List<Score>> getHighScore();
 
-    @POST("insertScore.php")
+    @POST(APIUtils.URL_SCORE)
     @FormUrlEncoded
-    Observable<Score> insertScore(@Field("gameId") String mGameId,
+    Observable<String> insertScore(@Field("game_id") int mGameId,
                                     @Field("score") double mScore,
-                                   @Field("name") String mName ,
-                                  @Field("age") String mAge ,
+                                   @Field("total_time") int mTime,
+                                   @Field("name") String mName,
+                                  @Field("age") int mAge ,
                                   @Field("sex") String mSex);
 
 }

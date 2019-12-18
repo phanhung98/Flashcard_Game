@@ -1,6 +1,5 @@
 package com.ccvn.flashcard_game.views;
 
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -37,10 +36,7 @@ import com.ccvn.flashcard_game.viewmodels.ListGameViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 
 @SuppressWarnings("ALL")
@@ -75,10 +71,8 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         mRecyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
 
-
        checkConnection();
         return root;
-
 
     }
 
