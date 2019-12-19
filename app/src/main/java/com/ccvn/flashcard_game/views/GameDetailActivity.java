@@ -12,7 +12,6 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -61,7 +60,7 @@ public class GameDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getIntExtra(ListGameFragment.GAME_ID, 0);
-        mGameDetailViewModel.getGameDetail(String.valueOf(id));
+        mGameDetailViewModel.getGameDetail(APIUtils.URL_GAME_LIST + id);
     }
     private void showGameDetail() {
 

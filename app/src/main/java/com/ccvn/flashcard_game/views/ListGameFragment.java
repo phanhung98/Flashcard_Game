@@ -1,7 +1,7 @@
 package com.ccvn.flashcard_game.views;
 
+
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -13,14 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.RadioButton;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -28,6 +26,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ccvn.flashcard_game.Common.NetworkChangeReceiver;
 import com.ccvn.flashcard_game.models.Game;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.retrofit.APIUtils;
@@ -35,7 +34,7 @@ import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.Adapter.GameAdapter;
 import com.ccvn.flashcard_game.viewmodels.ListGameViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.dialog.MaterialDialogs;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,23 +65,21 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
                              ViewGroup container, Bundle savedInstanceState) {
         mListGame= new ArrayList<>();
 
-        mViewModel = ViewModelProviders.of(this).get(ListGameViewModel.class);
-        mViewModel.getGame();
-
       // Init GameAPIService class
         mGameAPIService = APIUtils.getAPIService();
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         mRecyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
 
-
        checkConnection();
         return root;
-
 
     }
 
     private void getListGame(){
+
+        mViewModel = ViewModelProviders.of(this).get(ListGameViewModel.class);
+        mViewModel.getGame();
 
         mViewModel.getAllGame().observe(ListGameFragment.this, new Observer<List<Game>>() {
             @Override
@@ -96,7 +93,6 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
      // setup recyclerview and display.
     private void displayData(List<Game> gameList) {
-
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -123,19 +119,9 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
           int id = mListGame.get(position).getId();
             readData(id);
     }
-    // check online or not.
-    protected boolean isOnline(){
-        ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnectedOrConnecting() ){
-            return true;
-        }else {
-            return false;
-        }
-    }
     // check conection.
     public void checkConnection(){
-        if (isOnline()){
+        if (NetworkChangeReceiver.isOnline(getContext())){
            getListGame();
         }else {
 
@@ -154,7 +140,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         final RadioButton mMale = view.findViewById(R.id.male);
         final RadioButton mFemale = view.findViewById(R.id.female);
 
-        final AlertDialog.Builder mDialog = new MaterialAlertDialogBuilder(getContext())
+        final androidx.appcompat.app.AlertDialog.Builder mDialog = new MaterialAlertDialogBuilder(getContext())
                 .setView(view)
                 .setCancelable(false);
         final AlertDialog alertDialog = mDialog.create();
