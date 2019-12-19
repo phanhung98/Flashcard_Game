@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "437739879737",
+    "firebase_url": "https://cc-flashcard.firebaseio.com",
+    "project_id": "cc-flashcard",
+    "storage_bucket": "cc-flashcard.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:437739879737:android:fd320cb4de8fee3fb8bce8",
+        "android_client_info": {
+          "package_name": "com.ccvn.flashcard_game"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "437739879737-5jo78adhqc0u8re12rlqj3mstc4trm3k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ccvn.flashcard_game",
+            "certificate_hash": "6f5c6e5238031595bbe45d8190ad4a4940f3a2b4"
+          }
+        },
+        {
+          "client_id": "437739879737-0m799to61ip0ump2732ordrfh894j987.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSETGl9nauU74ffXKonEakFKpUvSlKQDs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "437739879737-0m799to61ip0ump2732ordrfh894j987.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

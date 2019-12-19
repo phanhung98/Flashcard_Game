@@ -151,7 +151,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
         String flashcradId = String.valueOf(mFlashcardId.get(pos));
         String url = APIUtils.URL_FLASHCARD + flashcradId;
-        mGamePlayViewModel.getNextFlashcard(url);
+        mGamePlayViewModel.getNextFlashcard(flashcradId);
 
     }
 
