@@ -1,6 +1,6 @@
 package com.ccvn.flashcard_game.views;
 
-import android.app.AlertDialog;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,25 +13,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Button;
+
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ccvn.flashcard_game.Common.NetworkChangeReceiver;
 import com.ccvn.flashcard_game.models.Game;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.Adapter.GameAdapter;
 import com.ccvn.flashcard_game.viewmodels.ListGameViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,9 +65,6 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
                              ViewGroup container, Bundle savedInstanceState) {
         mListGame= new ArrayList<>();
 
-        mViewModel = ViewModelProviders.of(this).get(ListGameViewModel.class);
-        mViewModel.getGame();
-
       // Init GameAPIService class
         mGameAPIService = APIUtils.getAPIService();
 
@@ -78,6 +78,9 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
     private void getListGame(){
 
+        mViewModel = ViewModelProviders.of(this).get(ListGameViewModel.class);
+        mViewModel.getGame();
+
         mViewModel.getAllGame().observe(ListGameFragment.this, new Observer<List<Game>>() {
             @Override
             public void onChanged(List<Game> games) {
@@ -90,7 +93,6 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
      // setup recyclerview and display.
     private void displayData(List<Game> gameList) {
-
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -117,19 +119,9 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
           int id = mListGame.get(position).getId();
             readData(id);
     }
-    // check online or not.
-    protected boolean isOnline(){
-        ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnectedOrConnecting() ){
-            return true;
-        }else {
-            return false;
-        }
-    }
     // check conection.
     public void checkConnection(){
-        if (isOnline()){
+        if (NetworkChangeReceiver.isOnline(getContext())){
            getListGame();
         }else {
 
@@ -148,18 +140,13 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         final RadioButton mMale = view.findViewById(R.id.male);
         final RadioButton mFemale = view.findViewById(R.id.female);
 
-        Button mSave = view.findViewById(R.id.btn_comfirm);
-        ImageButton mCancel = view.findViewById(R.id.cancel);
+        final androidx.appcompat.app.AlertDialog.Builder mDialog = new MaterialAlertDialogBuilder(getContext())
+                .setView(view)
+                .setCancelable(false);
+        final AlertDialog alertDialog = mDialog.create();
+        alertDialog.show();
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-        alertDialog.setTitle("Congratulation!");
-        alertDialog.setView(view);
-        alertDialog.setCancelable(false);
-        final AlertDialog dialog = alertDialog.create();
-        dialog.show();
-
-
-        mSave.setOnClickListener(new View.OnClickListener() {
+        alertDialog.findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -182,20 +169,21 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
                     editor.apply();
 
                     Toast.makeText(getContext(), "You can play now!", Toast.LENGTH_SHORT).show();
+                    alertDialog.dismiss();
 
                 }else {
                     Toast.makeText(getContext(), "Please fill information!", Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
-        mCancel.setOnClickListener(new View.OnClickListener() {
+        alertDialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                   dialog.dismiss();
+                alertDialog.dismiss();
             }
         });
-
 
     }
 
