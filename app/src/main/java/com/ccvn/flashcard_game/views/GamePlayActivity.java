@@ -53,6 +53,8 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     private static final int RADIO_BOX = 1;
     private static final int INPUT_TEXT = 2;
+    public static final int SWIPE_THRESHOLD = 100;
+    public static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
     public List<Integer> mFlashcardId;
     GameAPIService gameAPIService;
@@ -259,6 +261,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
             if (isRight && mRadioGroup.getChildAt(i).getId() == mRadioGroup.getCheckedRadioButtonId()){
                 mRadioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.right_answer));
                 mRadioGroup.getChildAt(i).setClickable(false);
+                ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.WHITE);
 
                 setScore();
                 getTotalTime();
@@ -266,6 +269,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
             else if (!isRight && mRadioGroup.getChildAt(i).getId() == mRadioGroup.getCheckedRadioButtonId()){
                 mRadioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.wrong_answer));
                 mRadioGroup.getChildAt(i).setClickable(false);
+                ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.WHITE);
 
                 getTotalTime();
             }
@@ -312,7 +316,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
             mRadioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.radio_flat_selector));
             mRadioGroup.getChildAt(i).setClickable(true);
-            ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.BLACK);
+            ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(getResources().getColor(R.color.color_on_background));
 
         }
         mRadioGroup.clearCheck();
@@ -452,32 +456,47 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     // Move to next flashcard when user swipe
     @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if (mAnswerOptionOne.isChecked() || mAnswerOptionTwo.isChecked() || mAnswerOptionThree.isChecked()
-        || !mSubmit.isEnabled()){
-        position++;
-        mNextCard.setVisibility(View.INVISIBLE);
+    public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
 
-        if (position <= mFlashcardId.size() - 1) {
-            count++;
+        float diffY = moveEvent.getY() - downEvent.getY();
+        float diffX =  moveEvent.getX() - downEvent.getX();
 
-            getUrlForNextFlashcard(position);
-
-            setAnswerOptionDefault();
-            setInputAnserDefault();
-            showFlashcard();
-            mChronometer.setBase(SystemClock.elapsedRealtime());
-            mChronometer.start();
-
-            if (position == mFlashcardId.size() - 1) {
-                mNextCard.setText("Finish");
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (diffX < 0) {
+                    onSwipeLeft();
+                }
             }
-        } else {
-            insertScore();
-        }
         }
 
         return true;
+    }
+
+    private void onSwipeLeft() {
+
+        if (mAnswerOptionOne.isChecked() || mAnswerOptionTwo.isChecked() || mAnswerOptionThree.isChecked()
+                || !mSubmit.isEnabled()){
+            position++;
+            mNextCard.setVisibility(View.INVISIBLE);
+
+            if (position <= mFlashcardId.size() - 1) {
+                count++;
+
+                getUrlForNextFlashcard(position);
+
+                setAnswerOptionDefault();
+                setInputAnserDefault();
+                showFlashcard();
+                mChronometer.setBase(SystemClock.elapsedRealtime());
+                mChronometer.start();
+
+                if (position == mFlashcardId.size() - 1) {
+                    mNextCard.setText("Finish");
+                }
+            } else {
+                insertScore();
+            }
+        }
     }
 
     @Override

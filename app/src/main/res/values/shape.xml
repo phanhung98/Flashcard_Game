@@ -14,7 +14,7 @@
         <item name="android:background">@drawable/radio_flat_selector</item>
         <item name="android:button">@null</item>
         <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
-<!--        <item name="android:elevation" tools:targetApi="lollipop">@dimen/spacing_small</item>-->
+        <item name="android:textColor">@color/color_on_background</item>
     </style>
 
 </resources>

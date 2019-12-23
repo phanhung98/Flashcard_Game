@@ -55,6 +55,7 @@
     <style name="MyTextViewStyle" parent="android:Widget.TextView">
                 <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
                 <item name="android:gravity">center</item>
+                <item name="android:textColor">@color/color_on_background</item>
     </style>
 
 
