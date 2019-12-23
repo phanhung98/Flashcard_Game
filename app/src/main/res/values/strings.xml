@@ -46,5 +46,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="submit">Submit</string>
+    <string name="SAVE">SAVE</string>
+    <string name="a11y_plant_item_image">Picture of Game</string>
 
 </resources>

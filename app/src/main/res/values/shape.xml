@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="ShapeAppearance.FlashcardGame.Card" parent="ShapeAppearance.MaterialComponents">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">@dimen/spacing_medium</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">@dimen/spacing_medium</item>
+    </style>
+
+
+    <style name="ShapeAppearance.FlashcardGame.RadioButton" parent="ShapeAppearance.MaterialComponents">
+        <item name="android:background">@drawable/radio_flat_selector</item>
+        <item name="android:button">@null</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
+<!--        <item name="android:elevation" tools:targetApi="lollipop">@dimen/spacing_small</item>-->
+    </style>
+
+</resources>

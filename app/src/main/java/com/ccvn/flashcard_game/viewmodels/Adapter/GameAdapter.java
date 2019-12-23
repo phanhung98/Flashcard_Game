@@ -67,9 +67,9 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         public GameViewHolder(@NonNull View itemView, GameAdapter.OnGameListener onGameListener) {
             super(itemView);
 
-            mGamename=(TextView)itemView.findViewById(R.id.game_name);
+            mGamename= itemView.findViewById(R.id.game_item_title);
 
-            mGameImage=(ImageView) itemView.findViewById(R.id.gameImage);
+            mGameImage= itemView.findViewById(R.id.game_item_image);
             this.onGameListener= onGameListener;
 //        container=(RelativeLayout) itemView.findViewById(R.id.container);
             itemView.setOnClickListener(this);

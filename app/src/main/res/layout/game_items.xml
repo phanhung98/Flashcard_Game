@@ -2,47 +2,42 @@
     <com.google.android.material.card.MaterialCardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_margin="@dimen/keyline_1"
-        app:cardElevation="@dimen/keyline_1"
+        android:layout_marginLeft="@dimen/spacing_middle"
+        android:layout_marginRight="@dimen/spacing_middle"
+        android:layout_marginBottom="@dimen/spacing_large"
+        app:cardElevation="@dimen/spacing_small"
+        app:cardPreventCornerOverlap="false"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.FlashcardGame.Card"
         android:layout_width="match_parent"
-        android:layout_height="270dp">
+        android:layout_height="wrap_content">
 
        <androidx.constraintlayout.widget.ConstraintLayout
-           android:orientation="vertical"
            android:layout_width="match_parent"
            android:layout_height="match_parent">
 
-           <de.hdodenhof.circleimageview.CircleImageView
-               android:id="@+id/gameImage"
-               android:layout_width="270dp"
-               android:layout_height="270dp"
-               android:layout_centerHorizontal="true"
-               android:layout_marginStart="24dp"
-               android:layout_marginLeft="24dp"
-               android:layout_marginEnd="24dp"
-               android:layout_marginRight="24dp"
-               android:contentDescription="TODO"
-               app:civ_border_color="#FF000000"
-               app:civ_border_width="2dp"
-               app:layout_constraintBottom_toBottomOf="parent"
+           <ImageView
+               android:id="@+id/game_item_image"
+               android:layout_width="0dp"
+               android:layout_height="@dimen/plant_item_image_height"
+               android:contentDescription="@string/a11y_plant_item_image"
+               android:scaleType="centerCrop"
                app:layout_constraintEnd_toEndOf="parent"
                app:layout_constraintStart_toStartOf="parent"
                app:layout_constraintTop_toTopOf="parent" />
 
            <TextView
-               android:id="@+id/game_name"
-               style="@style/TextAppearance.AppCompat.Headline"
-               android:layout_width="match_parent"
+               android:id="@+id/game_item_title"
+               android:layout_width="0dp"
                android:layout_height="wrap_content"
-               android:layout_alignBottom="@+id/gameImage"
-               android:background="#CC131212"
-               android:padding="5dp"
-               android:textAlignment="center"
-               android:textColor="#fff"
-               app:layout_constraintBottom_toBottomOf="@+id/gameImage"
+               android:layout_marginBottom="@dimen/margin_normal"
+               android:layout_marginTop="@dimen/margin_normal"
+               android:textAppearance="?attr/textAppearanceListItem"
+               android:gravity="center_horizontal"
                app:layout_constraintEnd_toEndOf="parent"
-               app:layout_constraintStart_toStartOf="parent" />
-
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@id/game_item_image"
+               app:layout_constraintBottom_toBottomOf="parent"
+              />
 
        </androidx.constraintlayout.widget.ConstraintLayout>
 
