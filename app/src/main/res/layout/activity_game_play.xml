@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
- <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,7 +16,7 @@
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
-        android:layout_width= "wrap_content"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp"
@@ -75,10 +75,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:textColor="@color/color_on_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         app:layout_constraintTop_toBottomOf="@+id/tv_score" />
 
     <TextView
@@ -99,12 +99,13 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
-        android:layout_width="258dp"
-        android:layout_height="255dp"
+        android:layout_width="240dp"
+        android:layout_height="230dp"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/radio_group"
         app:layout_constraintEnd_toEndOf="@id/guideline7"
         app:layout_constraintStart_toStartOf="@id/guideline6"
         app:layout_constraintTop_toTopOf="@+id/guideline2">
@@ -120,13 +121,28 @@
 
         <TextView
             android:id="@+id/ImageViewText"
-            android:layout_width="258dp"
-            android:layout_height="255dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3" />
 
     </com.google.android.material.card.MaterialCardView>
+
+    <ImageButton
+        android:id="@+id/btn_next_card"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/next"
+        android:onClick="nextCard"
+        app:layout_constraintBottom_toBottomOf="@id/guideline3"
+        app:layout_constraintEnd_toEndOf="@id/guideline7"
+        app:layout_constraintStart_toEndOf="@id/guideline8"
+        app:layout_constraintTop_toTopOf="@id/guideline2" />
 
     <EditText
         android:id="@+id/inputAnswer"
@@ -188,23 +204,6 @@
 
     </RadioGroup>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_next_card"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="24dp"
-        android:onClick="nextCard"
-        android:text="@string/nextcard_button"
-        app:layout_constraintBottom_toBottomOf="@id/guideline5"
-        app:layout_constraintEnd_toEndOf="@id/guideline7"
-        app:layout_constraintStart_toStartOf="@id/guideline6"
-        app:layout_constraintTop_toTopOf="@+id/guideline4" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
         android:layout_width="wrap_content"
@@ -225,5 +224,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="inputAnswer,btn_Submit" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/next"
+        android:onClick="nextCard"
+        android:text="@string/nextcard_button"
+        app:layout_constraintBottom_toBottomOf="@id/guideline5"
+        app:layout_constraintEnd_toEndOf="@id/guideline7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

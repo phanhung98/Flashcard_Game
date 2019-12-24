@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
 
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -68,7 +69,8 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     RadioGroup mRadioGroup;
     RadioButton mAnswerOptionOne, mAnswerOptionTwo, mAnswerOptionThree;
 
-    Button mNextCard;
+    Button mFinish;
+    ImageButton mNextCard;
     Chronometer mChronometer;
     DecimalFormat f;
 
@@ -107,8 +109,8 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mQuestion.setVisibility(View.INVISIBLE);
         mRadioGroup.setVisibility(View.INVISIBLE);
        group.setVisibility(View.INVISIBLE);
-
         mNextCard.setVisibility(View.INVISIBLE);
+        mFinish.setVisibility(View.INVISIBLE);
         if (NetworkChangeReceiver.isOnline(getBaseContext())) {
             showFlashcard();
         }else {
@@ -130,6 +132,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mQuestion = findViewById(R.id.tv_question);
         mChronometer = findViewById(R.id.time);
         mNextCard = findViewById(R.id.btn_next_card);
+        mFinish = findViewById(R.id.btn_finish);
         mInputAnswer = findViewById(R.id.inputAnswer);
         mSubmit = findViewById(R.id.btn_Submit);
 
@@ -149,7 +152,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
         String flashcradId = String.valueOf(mFlashcardId.get(pos));
         String url = APIUtils.URL_FLASHCARD + flashcradId;
-        mGamePlayViewModel.getNextFlashcard(url);
+        mGamePlayViewModel.getNextFlashcard(flashcradId);
 
     }
 
@@ -299,7 +302,8 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                 mChronometer.start();
 
                 if (position == mFlashcardId.size() - 1) {
-                    mNextCard.setText("Finish");
+                    mFinish.setVisibility(View.VISIBLE);
+                    mFinish.setText("Finish");
                 }
             } else {
                 insertScore();
@@ -491,7 +495,8 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                 mChronometer.start();
 
                 if (position == mFlashcardId.size() - 1) {
-                    mNextCard.setText("Finish");
+                    mFinish.setVisibility(View.VISIBLE);
+                    mFinish.setText("Finish");
                 }
             } else {
                 insertScore();
