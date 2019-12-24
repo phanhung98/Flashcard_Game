@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.bumptech.glide.Glide;
 import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.R;
@@ -60,7 +59,7 @@ public class GameDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getIntExtra(ListGameFragment.GAME_ID, 0);
-        mGameDetailViewModel.getGameDetail(String.valueOf(id));
+        mGameDetailViewModel.getGameDetail(APIUtils.URL_GAME_LIST + id);
     }
     private void showGameDetail() {
 
