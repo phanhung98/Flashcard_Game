@@ -337,7 +337,7 @@ public class GamePlayActivity extends AppCompatActivity{
 
     }
 
-    //Insert score to database
+    //Insert score to databaseas
     private void insertScore() {
 
         if (Common.currentUser == null){
