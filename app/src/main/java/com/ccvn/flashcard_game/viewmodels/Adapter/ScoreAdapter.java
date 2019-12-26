@@ -63,8 +63,8 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     // this is used for binding data to ViewHolder
     public void bindDataToView(Score currentScore){
 
-        mUserName.setText(currentScore.getUsername());
-        mGamename.setText(currentScore.getGamename());
+        mUserName.setText(currentScore.getUserName());
+        mGamename.setText(currentScore.getGameName());
         mHightScore.setText(String.valueOf(currentScore.getScore()));
 
 
