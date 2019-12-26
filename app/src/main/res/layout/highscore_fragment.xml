@@ -3,15 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
-    <data>
-
-    </data>
-
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.ccvn.flashcard_game.views.ScoreFragment">
+        android:orientation="vertical"
+        android:background="@color/color_background"
+        tools:context=".views.HighScoreFragment">
 
         <LinearLayout
             android:weightSum="7"
@@ -63,16 +60,13 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"/>
 
-
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/Scorerecycler"
+            android:id="@+id/hight_score_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layoutAnimation="@anim/layout_animation_slide_from_right"
-            >
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layoutAnimation="@anim/layout_animation_slide_from_right"/>
 
     </LinearLayout>
 

@@ -2,33 +2,23 @@ package com.ccvn.flashcard_game.views;
 
 
 import androidx.annotation.RequiresApi;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-
 import com.bumptech.glide.Glide;
 import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.models.Game;
-
-import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.viewmodels.GameDetailViewModel;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 public class GameDetailActivity extends AppCompatActivity {
 
@@ -60,7 +50,7 @@ public class GameDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getIntExtra(ListGameFragment.GAME_ID, 0);
-        mGameDetailViewModel.getGameDetail(APIUtils.URL_GAME_LIST + id);
+        mGameDetailViewModel.getGameDetail(String.valueOf(id));
     }
     private void showGameDetail() {
 

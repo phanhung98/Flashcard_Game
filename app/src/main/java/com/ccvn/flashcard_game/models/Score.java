@@ -2,31 +2,40 @@ package com.ccvn.flashcard_game.models;
 
 public class Score {
 
-    private String username;
-    private String gamename;
-    private int score;
+    private String userName;
+    private String gameName;
+    private double score;
+    private int rank;
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getGamename() {
-        return gamename;
+    public String getGameName() {
+        return gameName;
     }
 
-    public void setGamename(String gamename) {
-        this.gamename = gamename;
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
     }
 
-    public int getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 }

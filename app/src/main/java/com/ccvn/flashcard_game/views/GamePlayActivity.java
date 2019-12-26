@@ -3,6 +3,8 @@ package com.ccvn.flashcard_game.views;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -150,7 +152,7 @@ public class GamePlayActivity extends AppCompatActivity{
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
         String flashcradId = String.valueOf(mFlashcardId.get(pos));
         String url = APIUtils.URL_FLASHCARD + flashcradId;
-        mGamePlayViewModel.getNextFlashcard(url);
+        mGamePlayViewModel.getNextFlashcard(flashcradId);
 
     }
 
@@ -304,7 +306,8 @@ public class GamePlayActivity extends AppCompatActivity{
                     mNextCard.setText("Finish");
                 }
             } else {
-                insertScore();
+                scoreDialog();
+//                insertScore();
             }
         }else {
             Toast.makeText(this, R.string.check_connection, Toast.LENGTH_SHORT).show();
@@ -379,18 +382,22 @@ public class GamePlayActivity extends AppCompatActivity{
         alertDialog.setTitle("Congratulation!");
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
+       final AlertDialog dialog = alertDialog.create();
+       dialog.show();
 
        mScore.setText("Your score: " + f.format(score));
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent home = new Intent(GamePlayActivity.this, GameActivity.class);
-                startActivity(home);
+                dialog.dismiss();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.container, new HighScoreFragment());
+                fragmentTransaction.commit();
             }
         });
 
-        AlertDialog dialog = alertDialog.create();
-        dialog.show();
+
    }
 
     // set score for each flashcard
