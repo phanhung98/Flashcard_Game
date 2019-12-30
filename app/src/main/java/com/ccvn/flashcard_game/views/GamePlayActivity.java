@@ -65,8 +65,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     RadioGroup mRadioGroup;
     RadioButton mAnswerOptionOne, mAnswerOptionTwo, mAnswerOptionThree;
 
-    Button mFinish;
-    ImageButton mNextCard;
+    Button mNextCard;
     Chronometer mChronometer;
     DecimalFormat f;
 
@@ -106,7 +105,6 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mRadioGroup.setVisibility(View.INVISIBLE);
        group.setVisibility(View.INVISIBLE);
         mNextCard.setVisibility(View.INVISIBLE);
-        mFinish.setVisibility(View.INVISIBLE);
         if (NetworkChangeReceiver.isOnline(getBaseContext())) {
             showFlashcard();
         }else {
@@ -148,7 +146,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
         String flashcradId = String.valueOf(mFlashcardId.get(pos));
         String url = APIUtils.URL_FLASHCARD + flashcradId;
-        mGamePlayViewModel.getNextFlashcard(flashcradId);
+        mGamePlayViewModel.getNextFlashcard(url);
 
     }
 
@@ -298,8 +296,8 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                 mChronometer.start();
 
                 if (position == mFlashcardId.size() - 1) {
-                    mFinish.setVisibility(View.VISIBLE);
-                    mFinish.setText("Finish");
+                    mNextCard.setVisibility(View.VISIBLE);
+                    mNextCard.setText("Finish");
                 }
             } else {
                 scoreDialog();
@@ -496,8 +494,8 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                 mChronometer.start();
 
                 if (position == mFlashcardId.size() - 1) {
-                    mFinish.setVisibility(View.VISIBLE);
-                    mFinish.setText("Finish");
+                    mNextCard.setVisibility(View.VISIBLE);
+                    mNextCard.setText("Finish");
                 }
             } else {
                 insertScore();
