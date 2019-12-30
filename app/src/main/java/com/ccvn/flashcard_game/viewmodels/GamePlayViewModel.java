@@ -90,26 +90,19 @@ public class GamePlayViewModel extends AndroidViewModel {
     }
 
     public Dialog show(Context context) {
-        return show(context, null);
+        return show(context, false);
     }
 
-    public Dialog show(Context context, CharSequence title) {
-        return show(context, title, false);
+    public Dialog show(Context context, boolean cancelable) {
+        return show(context, cancelable, null);
     }
 
-    public Dialog show(Context context, CharSequence title, boolean cancelable) {
-        return show(context, title, cancelable, null);
-    }
-
-    public Dialog show(Context context, CharSequence title, boolean cancelable,
+    public Dialog show(Context context, boolean cancelable,
                        DialogInterface.OnCancelListener cancelListener) {
         LayoutInflater inflator = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         final View view = inflator.inflate(R.layout.progress_bar, null);
-        if(title != null) {
-            final TextView tv = (TextView) view.findViewById(R.id.id_title);
-            tv.setText(title);
-        }
 
         dialog = new Dialog(context, R.style.NewDialog);
         dialog.setContentView(view);

@@ -132,7 +132,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     //Show flashcard
     public void showFlashcard(){
 
-            mGamePlayViewModel.show(this, "Loading...");
+            mGamePlayViewModel.show(this);
 
                 mGamePlayViewModel.getAllFlashcard().observe(GamePlayActivity.this, new Observer<Flashcard>() {
                     @Override
