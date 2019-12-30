@@ -1,11 +1,18 @@
 package com.ccvn.flashcard_game.viewmodels;
 
 import android.app.Application;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.models.Flashcard;
 import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
@@ -23,6 +30,7 @@ public class GamePlayViewModel extends AndroidViewModel {
     private GameAPIService mGameAPIService;
     private MutableLiveData<Flashcard> mFlashcard;
     private MutableLiveData<String> mSuccess;
+    private Dialog dialog;
 
     CompositeDisposable compositeDisposable= new CompositeDisposable();
 
@@ -54,7 +62,6 @@ public class GamePlayViewModel extends AndroidViewModel {
                 }));
 
     }
-
     public void storeScore(int gameId, double score, int totalTime, String name, int age, String sex){
 
         mGameAPIService.insertScore(gameId, score, totalTime, name, age, sex).subscribeOn(Schedulers.io())
@@ -80,6 +87,41 @@ public class GamePlayViewModel extends AndroidViewModel {
 
                                     }
                                 });
+    }
+
+    public Dialog show(Context context) {
+        return show(context, null);
+    }
+
+    public Dialog show(Context context, CharSequence title) {
+        return show(context, title, false);
+    }
+
+    public Dialog show(Context context, CharSequence title, boolean cancelable) {
+        return show(context, title, cancelable, null);
+    }
+
+    public Dialog show(Context context, CharSequence title, boolean cancelable,
+                       DialogInterface.OnCancelListener cancelListener) {
+        LayoutInflater inflator = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View view = inflator.inflate(R.layout.progress_bar, null);
+        if(title != null) {
+            final TextView tv = (TextView) view.findViewById(R.id.id_title);
+            tv.setText(title);
+        }
+
+        dialog = new Dialog(context, R.style.NewDialog);
+        dialog.setContentView(view);
+        dialog.setCancelable(cancelable);
+        dialog.setOnCancelListener(cancelListener);
+        dialog.show();
+
+        return dialog;
+    }
+
+    public Dialog getDialog() {
+        return dialog;
     }
 
 }
