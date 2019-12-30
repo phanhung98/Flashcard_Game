@@ -1,6 +1,5 @@
 package com.ccvn.flashcard_game.views;
 
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;

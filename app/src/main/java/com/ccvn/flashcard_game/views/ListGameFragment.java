@@ -1,25 +1,26 @@
 package com.ccvn.flashcard_game.views;
 
-
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -33,7 +34,7 @@ import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.Adapter.GameAdapter;
 import com.ccvn.flashcard_game.viewmodels.ListGameViewModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     public static final String SEX = "Sex";
 
     GameAPIService mGameAPIService;
-    private RecyclerView mRecyclerView;
+    private RecyclerView mGameList;
     private List<Game> mListGame;
     private ListGameViewModel mViewModel;
 
@@ -69,7 +70,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         mGameAPIService = APIUtils.getAPIService();
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        mRecyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
+        mGameList = (RecyclerView) root.findViewById(R.id.game_list);
 
        checkConnection();
         return root;
@@ -94,11 +95,10 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
      // setup recyclerview and display.
     private void displayData(List<Game> gameList) {
 
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mGameList.setHasFixedSize(true);
         GameAdapter adapter= new GameAdapter(getContext(), gameList, this);
-        mRecyclerView.setAdapter(adapter);
-        runLayoutAnimation(mRecyclerView);
+        mGameList.setAdapter(adapter);
+        runLayoutAnimation(mGameList);
 
     }
     // load animation for item.
@@ -134,19 +134,31 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
         LayoutInflater inflater = getLayoutInflater();
         final View view = inflater.inflate(R.layout.info_form, null);
+
+        Context context;
+        final Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(view);
+        dialog.setCancelable(false);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
         final EditText mName = view.findViewById(R.id.edt_name);
         final EditText mAge = view.findViewById(R.id.edt_age);
 
         final RadioButton mMale = view.findViewById(R.id.male);
         final RadioButton mFemale = view.findViewById(R.id.female);
 
-        final androidx.appcompat.app.AlertDialog.Builder mDialog = new MaterialAlertDialogBuilder(getContext())
-                .setView(view)
-                .setCancelable(false);
-        final AlertDialog alertDialog = mDialog.create();
-        alertDialog.show();
-
-        alertDialog.findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
+        ((ImageButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        ((Button) dialog.findViewById(R.id.bt_save)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -169,21 +181,15 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
                     editor.apply();
 
                     Toast.makeText(getContext(), "You can play now!", Toast.LENGTH_SHORT).show();
-                    alertDialog.dismiss();
-
+                    dialog.dismiss();
                 }else {
                     Toast.makeText(getContext(), "Please fill information!", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
-        alertDialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
 
     }
 

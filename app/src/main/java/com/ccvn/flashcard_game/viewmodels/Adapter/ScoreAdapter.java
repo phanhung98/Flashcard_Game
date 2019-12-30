@@ -49,7 +49,27 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
 
     public class ScoreViewHolder extends RecyclerView.ViewHolder{
 
+<<<<<<< HEAD
         HightsocreItemsBinding hightsocreItemsBinding;
+=======
+        TextView mUserName, mHightScore, mRank, mGamename;
+
+    public ScoreViewHolder(@NonNull View itemView) {
+        super(itemView);
+
+        mUserName = itemView.findViewById(R.id.tv_userName);
+        mHightScore = itemView.findViewById(R.id.tv_score);
+        mRank = itemView.findViewById(R.id.tv_rank);
+        mGamename = itemView.findViewById(R.id.tv_gamename);
+
+    }
+    // this is used for binding data to ViewHolder
+    public void bindDataToView(Score currentScore){
+
+        mUserName.setText(currentScore.getUserName());
+        mGamename.setText(currentScore.getGameName());
+        mHightScore.setText(String.valueOf(currentScore.getScore()));
+>>>>>>> 6357388020f41094f882b4277633d0aa46cd7523
 
     public ScoreViewHolder(@NonNull HightsocreItemsBinding hightsocreItemsBinding) {
         super(hightsocreItemsBinding.getRoot());

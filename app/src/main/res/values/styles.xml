@@ -27,6 +27,10 @@
         <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.PrimarySurface</item>
 
         <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6357388020f41094f882b4277633d0aa46cd7523
     </style>
 
     <style name="Base.MaterialThemeBuilder" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -50,9 +54,20 @@
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
+<<<<<<< HEAD
     <style name="MyTextViewStyle" parent="android:Widget.TextView">
        <item name="android:textAlignment" tools:ignore="NewApi">center</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
+=======
+
+    <style name="MyTextViewStyle" parent="android:Widget.TextView">
+                <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
+                <item name="android:gravity">center</item>
+                <item name="android:textColor">@color/color_on_background</item>
+    </style>
+
+
+>>>>>>> 6357388020f41094f882b4277633d0aa46cd7523
 </resources>

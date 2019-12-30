@@ -5,46 +5,39 @@ import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-
 import android.content.Context;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
-
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-
 import android.widget.Button;
-
 import android.widget.Chronometer;
-
 import android.widget.EditText;
-
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.bumptech.glide.Glide;
 import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.Common.NetworkChangeReceiver;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.models.Flashcard;
-
 import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.GamePlayViewModel;
 import java.text.DecimalFormat;
-
 import java.util.List;
 
 import static com.ccvn.flashcard_game.views.ListGameFragment.AGE;
@@ -53,10 +46,12 @@ import static com.ccvn.flashcard_game.views.ListGameFragment.SEX;
 import static com.ccvn.flashcard_game.views.ListGameFragment.USERINFO;
 
 
-public class GamePlayActivity extends AppCompatActivity{
+public class GamePlayActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
     private static final int RADIO_BOX = 1;
     private static final int INPUT_TEXT = 2;
+    public static final int SWIPE_THRESHOLD = 100;
+    public static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
     public List<Integer> mFlashcardId;
     GameAPIService gameAPIService;
@@ -70,7 +65,8 @@ public class GamePlayActivity extends AppCompatActivity{
     RadioGroup mRadioGroup;
     RadioButton mAnswerOptionOne, mAnswerOptionTwo, mAnswerOptionThree;
 
-    Button mNextCard;
+    Button mFinish;
+    ImageButton mNextCard;
     Chronometer mChronometer;
     DecimalFormat f;
 
@@ -78,6 +74,8 @@ public class GamePlayActivity extends AppCompatActivity{
     Button mSubmit;
     Group group;
     boolean isRight;
+
+    GestureDetectorCompat detector;
 
 
     private Flashcard mFlashcard;
@@ -107,14 +105,14 @@ public class GamePlayActivity extends AppCompatActivity{
         mQuestion.setVisibility(View.INVISIBLE);
         mRadioGroup.setVisibility(View.INVISIBLE);
        group.setVisibility(View.INVISIBLE);
-
         mNextCard.setVisibility(View.INVISIBLE);
+        mFinish.setVisibility(View.INVISIBLE);
         if (NetworkChangeReceiver.isOnline(getBaseContext())) {
             showFlashcard();
         }else {
             Toast.makeText(this, R.string.check_connection, Toast.LENGTH_SHORT).show();
         }
-
+        detector = new GestureDetectorCompat(this, this);
     }
 
     private void initview() {
@@ -128,11 +126,9 @@ public class GamePlayActivity extends AppCompatActivity{
         mAnswerOptionThree = findViewById(R.id.radio_button_three);
         mImageViewText = findViewById(R.id.ImageViewText);
         mQuestion = findViewById(R.id.tv_question);
-
-        mSubmit = findViewById(R.id.btn_Submit);
         mChronometer = findViewById(R.id.time);
-
         mNextCard = findViewById(R.id.btn_next_card);
+//        mFinish = findViewById(R.id.btn_finish);
         mInputAnswer = findViewById(R.id.inputAnswer);
         mSubmit = findViewById(R.id.btn_Submit);
 
@@ -172,7 +168,6 @@ public class GamePlayActivity extends AppCompatActivity{
                             mImageGameplay.setVisibility(View.VISIBLE);
 
                             Glide.with(GamePlayActivity.this).load(flashcard.getUpload_path()).into(mImageGameplay);
-
                         }
 
                         if (flashcard.getUpload_path() == null) {
@@ -182,7 +177,6 @@ public class GamePlayActivity extends AppCompatActivity{
                             mImageViewText.setVisibility(View.VISIBLE);
 
                             mImageViewText.setText(flashcard.getWord());
-
                         }
 
                         if (flashcard.getWord() != null && flashcard.getWord() != null) {
@@ -193,14 +187,13 @@ public class GamePlayActivity extends AppCompatActivity{
 
                             mQuestion.setText(flashcard.getWord() + "?");
                             Glide.with(GamePlayActivity.this).load(flashcard.getUpload_path()).into(mImageGameplay);
-
                         }
 
                         if (flashcard.getType_id() == RADIO_BOX) {
 
-                            mAnswerOptionOne.setText(flashcard.getValue().get(0));
-                            mAnswerOptionTwo.setText(flashcard.getValue().get(1));
-                            mAnswerOptionThree.setText(flashcard.getValue().get(2));
+                            for (int i = 0; i < 3; i++){
+                                ((RadioButton)mRadioGroup.getChildAt(i)).setText(flashcard.getValue().get(i));
+                            }
 
                             mRadioGroup.setVisibility(View.VISIBLE);
                             group.setVisibility(View.INVISIBLE);
@@ -218,7 +211,6 @@ public class GamePlayActivity extends AppCompatActivity{
                                     }
                                 }
                             });
-
                         }
                         if (flashcard.getType_id() == INPUT_TEXT) {
 
@@ -259,27 +251,30 @@ public class GamePlayActivity extends AppCompatActivity{
         }
     }
     // Set right and wrong answer
+    @SuppressLint("NewApi")
     public void setAnswer(){
 
         for (int i = 0; i < 3; i++){
 
             isRight =  ((RadioButton)mRadioGroup.getChildAt(i)).getText().toString().equals(mFlashcard.getRight_answer());
             if (isRight && mRadioGroup.getChildAt(i).getId() == mRadioGroup.getCheckedRadioButtonId()){
-                ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.GREEN);
-                ((RadioButton)mRadioGroup.getChildAt(i)).setClickable(false);
+                mRadioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.right_answer));
+                mRadioGroup.getChildAt(i).setClickable(false);
+                ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.WHITE);
 
                 setScore();
                 getTotalTime();
             }
             else if (!isRight && mRadioGroup.getChildAt(i).getId() == mRadioGroup.getCheckedRadioButtonId()){
-                ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.RED);
-                ((RadioButton)mRadioGroup.getChildAt(i)).setClickable(false);
+                mRadioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.wrong_answer));
+                mRadioGroup.getChildAt(i).setClickable(false);
+                ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.WHITE);
 
                 getTotalTime();
             }
             else {
                 ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.GRAY);
-                ((RadioButton)mRadioGroup.getChildAt(i)).setClickable(false);
+                mRadioGroup.getChildAt(i).setClickable(false);
             }
         }
         mNextCard.setVisibility(View.VISIBLE);
@@ -303,7 +298,8 @@ public class GamePlayActivity extends AppCompatActivity{
                 mChronometer.start();
 
                 if (position == mFlashcardId.size() - 1) {
-                    mNextCard.setText("Finish");
+                    mFinish.setVisibility(View.VISIBLE);
+                    mFinish.setText("Finish");
                 }
             } else {
                 scoreDialog();
@@ -315,17 +311,15 @@ public class GamePlayActivity extends AppCompatActivity{
     }
 
     // Set radio button to default
+    @SuppressLint("NewApi")
     private void setAnswerOptionDefault(){
+        for (int i = 0; i < 3; i++){
 
-        mAnswerOptionOne.setTextColor(Color.BLACK);
-        mAnswerOptionOne.setClickable(true);
+            mRadioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.radio_flat_selector));
+            mRadioGroup.getChildAt(i).setClickable(true);
+            ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(getResources().getColor(R.color.color_on_background));
 
-        mAnswerOptionTwo.setTextColor(Color.BLACK);
-        mAnswerOptionTwo.setClickable(true);
-
-        mAnswerOptionThree.setTextColor(Color.BLACK);
-        mAnswerOptionThree.setClickable(true);
-
+        }
         mRadioGroup.clearCheck();
 
     }
@@ -367,7 +361,6 @@ public class GamePlayActivity extends AppCompatActivity{
                     }
             }
         });
-
     }
 
     //Show score
@@ -438,9 +431,84 @@ public class GamePlayActivity extends AppCompatActivity{
             mNextCard.setVisibility(View.VISIBLE);
 
             getTotalTime();
+        }
+    }
 
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    // Move to next flashcard when user swipe
+    @Override
+    public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
+
+        float diffY = moveEvent.getY() - downEvent.getY();
+        float diffX =  moveEvent.getX() - downEvent.getX();
+
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (diffX < 0) {
+                    onSwipeLeft();
+                }
+            }
         }
 
+        return true;
+    }
+
+    private void onSwipeLeft() {
+
+        if (mAnswerOptionOne.isChecked() || mAnswerOptionTwo.isChecked() || mAnswerOptionThree.isChecked()
+                || !mSubmit.isEnabled()){
+            position++;
+            mNextCard.setVisibility(View.INVISIBLE);
+
+            if (position <= mFlashcardId.size() - 1) {
+                count++;
+
+                getUrlForNextFlashcard(position);
+
+                setAnswerOptionDefault();
+                setInputAnserDefault();
+                showFlashcard();
+                mChronometer.setBase(SystemClock.elapsedRealtime());
+                mChronometer.start();
+
+                if (position == mFlashcardId.size() - 1) {
+                    mFinish.setVisibility(View.VISIBLE);
+                    mFinish.setText("Finish");
+                }
+            } else {
+                insertScore();
+            }
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
     @Override
