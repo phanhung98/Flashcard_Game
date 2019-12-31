@@ -45,7 +45,7 @@ public class ScoreFragment extends Fragment {
 
     private void addControl(View view){
 
-        mRecyclerview = view.findViewById(R.id.hight_score_recycler);
+        mRecyclerview = view.findViewById(R.id.Scorerecycler);
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 

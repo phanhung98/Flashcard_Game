@@ -56,6 +56,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     private static final int INPUT_TEXT = 2;
     public static final int SWIPE_THRESHOLD = 100;
     public static final int SWIPE_VELOCITY_THRESHOLD = 100;
+    public static final int RADIO_BUUTON_SIZE = 3;
 
     public List<Integer> mFlashcardId;
     GameAPIService gameAPIService;
@@ -152,7 +153,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
         String flashcradId = String.valueOf(mFlashcardId.get(pos));
         String url = APIUtils.URL_FLASHCARD + flashcradId;
-        mGamePlayViewModel.getNextFlashcard(flashcradId);
+        mGamePlayViewModel.getNextFlashcard(url);
 
     }
 
@@ -290,24 +291,24 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         return word != null;
     }
 
-
     public void getRightAnswer(){
 
-        if (mAnswerOptionOne.isChecked()){
-            setAnswer();
-        }
-        if (mAnswerOptionTwo.isChecked()){
-            setAnswer();
-        }
-        if (mAnswerOptionThree.isChecked()){
-            setAnswer();
+        for (int i = 0; i < RADIO_BUUTON_SIZE; i++){
+            if (isChecked(i)){
+                setAnswer();
+            }
         }
     }
+
+    private boolean isChecked(int i){
+        return ((RadioButton)mRadioGroup.getChildAt(i)).isChecked();
+    }
+
     // Set right and wrong answer
     @SuppressLint("NewApi")
     public void setAnswer(){
 
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < RADIO_BUUTON_SIZE; i++){
 
             isRight =  ((RadioButton)mRadioGroup.getChildAt(i)).getText().toString().equals(mFlashcard.getRight_answer());
             if (isRight && mRadioGroup.getChildAt(i).getId() == mRadioGroup.getCheckedRadioButtonId()){
@@ -339,7 +340,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
             position++;
             mNextCard.setVisibility(View.INVISIBLE);
 
-            if (position <= mFlashcardId.size() - 1) {
+            if (countToLastFlashcard(mFlashcardId)) {
                 count++;
 
                 getUrlForNextFlashcard(position);
@@ -350,7 +351,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                 mChronometer.setBase(SystemClock.elapsedRealtime());
                 mChronometer.start();
 
-                if (position == mFlashcardId.size() - 1) {
+                if (isLastFlashcard(mFlashcardId)) {
                     mFinish.setVisibility(View.VISIBLE);
                     mFinish.setText("Finish");
                 }
@@ -360,6 +361,13 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         }else {
             Toast.makeText(this, R.string.check_connection, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public boolean countToLastFlashcard(List<Integer> mFlashcardId){
+       return position <= mFlashcardId.size() - 1;
+    }
+    public boolean isLastFlashcard(List<Integer> mFlashcardId){
+        return position == mFlashcardId.size() - 1;
     }
 
     // Set radio button to default
@@ -514,18 +522,38 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         float diffY = moveEvent.getY() - downEvent.getY();
         float diffX =  moveEvent.getX() - downEvent.getX();
 
-        if (Math.abs(diffX) > Math.abs(diffY)) {
-            if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                if (diffX < 0) {
-                    onSwipeLeft();
-                }
-            }
-        }
+                greaterMovement(diffX, diffY);
 
         return true;
     }
 
+    private void greaterMovement(float diffX, float diffY) {
+        if (isgreaterMovement(diffX, diffY))
+            leftSwipe(diffX, diffY);
+    }
+
+    private void leftSwipe(float diffX, float diffY) {
+        if (isLeftSwipe(diffX, diffY))
+            onLeftSwipe(diffX);
+    }
+
+    private void onLeftSwipe(float diffX){
+        if (isLeft(diffX))
+            onSwipeLeft();
+    }
+
+    private boolean isgreaterMovement(float diffX, float diffY){
+        return Math.abs(diffX) > Math.abs(diffY);
+    }
+    private boolean isLeftSwipe(float diffX, float velocityX){
+        return Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD;
+    }
+    private boolean isLeft(float diffX){
+        return diffX < 0;
+    }
+
     private void onSwipeLeft() {
+
 
         if (mAnswerOptionOne.isChecked() || mAnswerOptionTwo.isChecked() || mAnswerOptionThree.isChecked()
                 || !mSubmit.isEnabled()){
