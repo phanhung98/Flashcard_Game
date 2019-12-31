@@ -112,7 +112,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mNextCard.setVisibility(View.INVISIBLE);
         mFinish.setVisibility(View.INVISIBLE);
         if (NetworkChangeReceiver.isOnline(getBaseContext())) {
-            showFlashcard();
+            showGamePlay();
         }else {
             Toast.makeText(this, R.string.check_connection, Toast.LENGTH_SHORT).show();
         }
@@ -156,91 +156,140 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     }
 
-    //Show flashcard
-    public void showFlashcard(){
-                mGamePlayViewModel.getAllFlashcard().observe(GamePlayActivity.this, new Observer<Flashcard>() {
-                    @Override
-                    public void onChanged(final Flashcard flashcard) {
+    public void showGamePlay(){
 
-                        mScore.setText(getString(R.string.score) + f.format(score));
-                        mQuestionCount.setText(count + "/" + mFlashcardId.size());
+        mScore.setText(getString(R.string.score) + f.format(score));
+        mQuestionCount.setText(count + "/" + mFlashcardId.size());
 
-                        if (flashcard.getWord() == null) {
-
-                            mImageViewText.setVisibility(View.INVISIBLE);
-                            mQuestion.setVisibility(View.INVISIBLE);
-                            mImageGameplay.setVisibility(View.VISIBLE);
-
-                            Glide.with(GamePlayActivity.this).load(flashcard.getUpload_path()).into(mImageGameplay);
-                        }
-
-                        if (flashcard.getUpload_path() == null) {
-
-                            mImageGameplay.setVisibility(View.INVISIBLE);
-                            mQuestion.setVisibility(View.INVISIBLE);
-                            mImageViewText.setVisibility(View.VISIBLE);
-
-                            mImageViewText.setText(flashcard.getWord());
-                        }
-
-                        if (flashcard.getWord() != null && flashcard.getWord() != null) {
-
-                            mImageGameplay.setVisibility(View.VISIBLE);
-                            mQuestion.setVisibility(View.VISIBLE);
-                            mImageViewText.setVisibility(View.INVISIBLE);
-
-                            mQuestion.setText(flashcard.getWord() + "?");
-                            Glide.with(GamePlayActivity.this).load(flashcard.getUpload_path()).into(mImageGameplay);
-                        }
-
-                        if (flashcard.getType_id() == RADIO_BOX) {
-
-                            for (int i = 0; i < 3; i++){
-                                ((RadioButton)mRadioGroup.getChildAt(i)).setText(flashcard.getValue().get(i));
-                            }
-
-                            mRadioGroup.setVisibility(View.VISIBLE);
-                            group.setVisibility(View.INVISIBLE);
-
-                            mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                    switch (checkedId) {
-                                        case R.id.radio_button_one:
-                                        case R.id.radio_button_two:
-                                        case R.id.radio_button_three:
-
-                                            getRightAnswer();
-                                            break;
-                                    }
-                                }
-                            });
-                        }
-                        if (flashcard.getType_id() == INPUT_TEXT) {
-
-                            mRadioGroup.setVisibility(View.INVISIBLE);
-                            group.setVisibility(View.VISIBLE);
-
-                            mSubmit.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (mInputAnswer.getText().length() == 0) {
-
-                                        mInputAnswer.setError("Please input your answer");
-                                    } else {
-                                        getRightAnswerInputText(flashcard);
-                                    }
-                                }
-                            });
-                        }
-                        mFlashcard = flashcard;
+        mGamePlayViewModel.getAllFlashcard().observe(this, new Observer<Flashcard>() {
+            @Override
+            public void onChanged(Flashcard flashcard) {
+                showFlashcard(flashcard);
+                showAnswer(flashcard);
+                mFlashcard = flashcard;
+            }
+        });
                         if (position == 0) {
                             mChronometer.setBase(SystemClock.elapsedRealtime());
                             mChronometer.start();
                         }
-                    }
-                });
     }
+
+    public void showFlashcard(Flashcard flashcard){
+
+        showWord(flashcard.getWord());
+        showImage(flashcard.getUpload_path());
+        showWordAndImage(flashcard.getWord(), flashcard.getUpload_path());
+
+    }
+
+    private void showAnswer(Flashcard flashcard) {
+        showRadioBox(flashcard.getType_id(), flashcard);
+        showInputText(flashcard.getType_id(), flashcard);
+    }
+
+    private void showRadioBox(int mRadioBox, final Flashcard flashcard) {
+        if (isRadioBox(mRadioBox)){
+
+            for (int i = 0; i < 3; i++){
+                ((RadioButton)mRadioGroup.getChildAt(i)).setText(flashcard.getValue().get(i));
+            }
+
+            mRadioGroup.setVisibility(View.VISIBLE);
+            group.setVisibility(View.INVISIBLE);
+
+            mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    switch (checkedId) {
+                        case R.id.radio_button_one:
+                        case R.id.radio_button_two:
+                        case R.id.radio_button_three:
+
+                            getRightAnswer();
+                            break;
+                    }
+                }
+            });
+
+        }
+    }
+
+    private boolean isRadioBox(int mRadioBox) {
+        return mRadioBox == RADIO_BOX;
+    }
+
+    private void showInputText(int mInputText, final Flashcard flashcard) {
+        if (isInputText(mInputText)){
+
+            mRadioGroup.setVisibility(View.INVISIBLE);
+            group.setVisibility(View.VISIBLE);
+
+            mSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mInputAnswer.getText().length() == 0) {
+
+                        mInputAnswer.setError("Please input your answer");
+                    } else {
+                        getRightAnswerInputText(flashcard);
+                    }
+                }
+            });
+
+        }
+    }
+
+    private boolean isInputText(int mInputText) {
+        return mInputText == INPUT_TEXT;
+    }
+
+    private void showWordAndImage(String word, String image) {
+
+        if (isWordAndImage(word, image)){
+
+            mImageGameplay.setVisibility(View.VISIBLE);
+            mQuestion.setVisibility(View.VISIBLE);
+            mImageViewText.setVisibility(View.INVISIBLE);
+
+            mQuestion.setText(word + "?");
+            Glide.with(GamePlayActivity.this).load(image).into(mImageGameplay);
+
+        }
+    }
+
+    private boolean isWordAndImage(String word, String image) {
+        return word != null && image != null;
+    }
+
+    private void showImage(String image) {
+        if (isImage(image)){
+            mImageViewText.setVisibility(View.INVISIBLE);
+            mQuestion.setVisibility(View.INVISIBLE);
+            mImageGameplay.setVisibility(View.VISIBLE);
+
+            Glide.with(GamePlayActivity.this).load(image).into(mImageGameplay);
+        }
+    }
+
+    private boolean isImage(String image) {
+        return image != null;
+    }
+
+    private void showWord(String word) {
+        if (isWord(word)){
+            mImageGameplay.setVisibility(View.INVISIBLE);
+            mQuestion.setVisibility(View.INVISIBLE);
+            mImageViewText.setVisibility(View.VISIBLE);
+
+            mImageViewText.setText(word);
+        }
+    }
+
+    private boolean isWord(String word) {
+        return word != null;
+    }
+
 
     public void getRightAnswer(){
 
@@ -297,7 +346,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
                 setAnswerOptionDefault();
                 setInputAnserDefault();
-                showFlashcard();
+                showGamePlay();
                 mChronometer.setBase(SystemClock.elapsedRealtime());
                 mChronometer.start();
 
@@ -490,7 +539,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
                 setAnswerOptionDefault();
                 setInputAnserDefault();
-                showFlashcard();
+               showGamePlay();
                 mChronometer.setBase(SystemClock.elapsedRealtime());
                 mChronometer.start();
 
