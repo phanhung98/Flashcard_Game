@@ -125,7 +125,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
         String flashcradId = String.valueOf(mFlashcardId.get(pos));
         String url = APIUtils.URL_FLASHCARD + flashcradId;
-        mGamePlayViewModel.getNextFlashcard(flashcradId);
+        mGamePlayViewModel.getNextFlashcard(url);
 
     }
 
