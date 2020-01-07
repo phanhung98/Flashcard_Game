@@ -1,70 +1,48 @@
 package com.ccvn.flashcard_game.views;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.transition.Fade;
-import androidx.transition.Transition;
-import androidx.transition.TransitionManager;
-
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
-
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.Common.CustomDialog;
 import com.ccvn.flashcard_game.Common.NetworkChangeReceiver;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.models.Flashcard;
-
 import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.GamePlayViewModel;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.circularreveal.CircularRevealWidget;
-
 import java.text.DecimalFormat;
-
 import java.util.List;
-import java.util.logging.Logger;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-
 import static com.ccvn.flashcard_game.views.ListGameFragment.AGE;
 import static com.ccvn.flashcard_game.views.ListGameFragment.NAME;
 import static com.ccvn.flashcard_game.views.ListGameFragment.SEX;
@@ -102,13 +80,14 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     boolean isRight;
 
     GestureDetectorCompat detector;
+    Animation animSlideDown;
     private CustomDialog mCustomDialog;
 
     private Flashcard mFlashcard;
     CompositeDisposable compositeDisposable;
     GameAPIService mGameAPIService;
 
-    private int position =0;
+    private int position = 0;
     private int count = 1;
     private double score = 0;
     private long time;
@@ -124,6 +103,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         compositeDisposable = new CompositeDisposable();
         mGameAPIService = APIUtils.getAPIService();
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
+        animSlideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
 
         f = new DecimalFormat("##.##");
         gameAPIService = APIUtils.getAPIService();
@@ -162,14 +142,13 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     public void showNextFlashcard(){
         position++;
         mNextCard.setVisibility(View.INVISIBLE);
-        if (countToLastFlashcard(mFlashcardId)) {
+        if (countToLastFlashcard(mFlashcardId)){
 
             count++;
             getUrlForNextFlashcard(position);
             showGamePlay();
 
-            if (isLastFlashcard(mFlashcardId)) {
-                mFinish.setVisibility(View.VISIBLE);
+            if (isLastFlashcard(mFlashcardId)){
                 mFinish.setText("Finish");
             }
         }
@@ -218,8 +197,6 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     //Set url for next flashcard
     private void getUrlForNextFlashcard(int pos){
-        Log.d("BBBB", "getUrlForNextFlashcard");
-        Log.d("BBBB", ""+pos);
         flashcradId = String.valueOf(mFlashcardId.get(pos));
         url = APIUtils.URL_FLASHCARD + flashcradId;
     }
@@ -228,11 +205,10 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
         mScore.setText(getString(R.string.score) + f.format(score));
         mQuestionCount.setText(count + "/" + mFlashcardId.size());
-        compositeDisposable.add(mGameAPIService.getFlashcard(flashcradId)
+        compositeDisposable.add(mGameAPIService.getFlashcard(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Flashcard>() {
-                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void accept(Flashcard flashcard) throws Exception {
                         showFlashcard(flashcard);
@@ -240,10 +216,6 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                         mFlashcard = flashcard;
                     }
                 }));
-
-        if (position == 0) {
-            setStartTime();
-        }
     }
 
     private void setStartTime(){
@@ -251,29 +223,24 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mChronometer.start();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void showFlashcard(Flashcard flashcard){
         showWord(flashcard.getWord());
         showImage(flashcard.getUpload_path());
         showWordAndImage(flashcard.getWord(), flashcard.getUpload_path());
-        Log.d("BBBB", "ShowFlashcard");
     }
 
     private void showAnswer(Flashcard flashcard) {
         showRadioBox(flashcard.getType_id(), flashcard);
         showInputText(flashcard.getType_id(), flashcard);
-//        mCustomDialog.getProgressBarDialog().dismiss();
-        Log.d("BBBB", "set default answer");
         setStartTime();
     }
 
-    private void showRadioBox(int mRadioBox, final Flashcard flashcard) {
+    private void showRadioBox(int mRadioBox, final Flashcard flashcard){
         if (isRadioBox(mRadioBox)){
 
             for (int i = 0; i < 3; i++){
                 ((RadioButton)mRadioGroup.getChildAt(i)).setText(flashcard.getValue().get(i));
             }
-            Log.d("BBBB", "ShowRadioBox");
             mRadioGroup.setVisibility(View.VISIBLE);
             group.setVisibility(View.INVISIBLE);
 
@@ -302,13 +269,9 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     private void showInputText(int mInputText, final Flashcard flashcard) {
         if (isInputText(mInputText)){
-
             mRadioGroup.setVisibility(View.INVISIBLE);
             group.setVisibility(View.VISIBLE);
-
             setInputAnserDefault();
-            Log.d("BBBB", "ShowInputText");
-
             mSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -341,6 +304,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     private void visibleNextcardButton(){
            if(isLastFlashcard(mFlashcardId)){
                mNextCard.setVisibility(View.INVISIBLE);
+               mFinish.setVisibility(View.VISIBLE);
            }else {
                mNextCard.setVisibility(View.VISIBLE);
            }
@@ -368,36 +332,15 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         return word != null && image != null;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     private void showImage(String image) {
-
         if (isImage(image)){
-
             mImageViewText.setVisibility(View.INVISIBLE);
             mQuestion.setVisibility(View.INVISIBLE);
-//            mImageGameplay.setVisibility(View.VISIBLE);
+            mImageGameplay.setVisibility(View.VISIBLE);
             Glide.with(GamePlayActivity.this).load(image).into(mImageGameplay);
-            showImageAnimation();
+            mImageGameplay.startAnimation(animSlideDown);
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void showImageAnimation(){
-        int cx = mImageGameplay.getWidth() / 2;
-        int cy = mImageGameplay.getHeight() / 2;
-        float finalRadius = (float) Math.hypot(cx, cy);
-
-        Animator anim = ViewAnimationUtils.createCircularReveal(mImageGameplay, cx, cy,
-                0, finalRadius);
-        anim.setDuration(800);
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                mImageGameplay.setVisibility(View.VISIBLE);
-            }
-        });
-        anim.start();
     }
 
     private boolean isImage(String image) {
@@ -425,7 +368,6 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
             if (isChecked(i))
                 setAnswer();
         }
-       visibleNextcardButton();
     }
 
     private boolean isChecked(int i){
@@ -448,6 +390,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                 setColorUncheckRadioButton(i);
             }
         }
+        visibleNextcardButton();
     }
     @SuppressLint("NewApi")
     public void showRightAnswer(int i){
@@ -542,14 +485,11 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     //Show score
    private void showScoreDialog(){
-
         mCustomDialog.showScoreDialog(this, score);
-
    }
 
     // set score for each flashcard
     private void setScore() {
-
         mChronometer.stop();
         time = (SystemClock.elapsedRealtime() - mChronometer.getBase())/1000;
         score = score + Math.round((0.01 + Math.pow(0.99, time)) * 100.0)/100.0;
