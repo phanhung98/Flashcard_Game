@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginBottom="@dimen/spacing_large"
-            tools:targetApi="lollipop" />
+             />
 
         <androidx.cardview.widget.CardView
             android:layout_gravity="center_horizontal"
