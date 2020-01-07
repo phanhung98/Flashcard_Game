@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ccvn.flashcard_game.Common.Common;
+import com.ccvn.flashcard_game.Common.CustomDialog;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.models.Game;
 
@@ -40,6 +41,7 @@ public class GameDetailActivity extends AppCompatActivity {
     private int id;
 
     GameDetailViewModel mGameDetailViewModel;
+    private CustomDialog customDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +49,13 @@ public class GameDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_detail);
 
         mListFlashcardId = new ArrayList<>();
+        customDialog = new CustomDialog();
 
             mGameDetailViewModel = ViewModelProviders.of(this).get(GameDetailViewModel.class);
 
         initview();
         getGameId();
+        customDialog.showProgressBarDialog(this);
         showGameDetail();
     }
 
@@ -59,7 +63,7 @@ public class GameDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getIntExtra(ListGameFragment.GAME_ID, 0);
-        mGameDetailViewModel.getGameDetail(APIUtils.URL_GAME_LIST + id);
+        mGameDetailViewModel.getGameDetail(String.valueOf(id));
     }
     private void showGameDetail() {
 
@@ -70,11 +74,13 @@ public class GameDetailActivity extends AppCompatActivity {
                 mGameNameDetail.setText(game.getName());
                 mHighestScore.setText("Highest Score: " + game.getScore());
                 mFlashcardTotal.setText("Consist: " + game.getFlashcard_total());
-                Glide.with(GameDetailActivity.this).load(game.getUpload_path()).into(mImageDetail);
+                Glide.with(GameDetailActivity.this).load(game.getUpload_path()).
+                        centerCrop().into(mImageDetail);
 
                 mListFlashcardId = game.getFlashcard_id();
 
                 Common.currentGame = game;
+                customDialog.getProgressBarDialog().dismiss();
             }
         });
     }

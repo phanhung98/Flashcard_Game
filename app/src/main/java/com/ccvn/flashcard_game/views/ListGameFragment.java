@@ -24,9 +24,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ccvn.flashcard_game.Common.CustomDialog;
 import com.ccvn.flashcard_game.Common.NetworkChangeReceiver;
 import com.ccvn.flashcard_game.models.Game;
 import com.ccvn.flashcard_game.R;
@@ -54,6 +54,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     public static final String SEX = "Sex";
 
     GameAPIService mGameAPIService;
+    private CustomDialog mCustomDialog;
     private RecyclerView mGameList;
     private List<Game> mListGame;
     private ListGameViewModel mViewModel;
@@ -68,6 +69,8 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
       // Init GameAPIService class
         mGameAPIService = APIUtils.getAPIService();
+      // Init CustomDialog class
+        mCustomDialog = new CustomDialog();
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         mGameList = (RecyclerView) root.findViewById(R.id.game_list);
@@ -79,6 +82,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
     private void getListGame(){
 
+        mCustomDialog.showProgressBarDialog(getContext(), "Please Wait...");
         mViewModel = ViewModelProviders.of(this).get(ListGameViewModel.class);
         mViewModel.getGame();
 
@@ -87,6 +91,8 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
             public void onChanged(List<Game> games) {
                 displayData(games);
                 mListGame = games;
+
+                mCustomDialog.getProgressBarDialog().dismiss();
             }
         });
 

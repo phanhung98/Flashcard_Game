@@ -29,7 +29,7 @@
     <!-- Toast string -->
     <string name="check_connection">Please check your connection!</string>
     <string name="button_play">Play Now</string>
-    <string name="score">Score: </string>
+    <string name="score">x</string>
 
     <!-- Score dialog -->
     <string name="title">Congratulation!</string>
