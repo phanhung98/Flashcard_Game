@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -35,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.Common.NetworkChangeReceiver;
 import com.ccvn.flashcard_game.R;
+import com.ccvn.flashcard_game.databinding.ActivityGamePlayBinding;
 import com.ccvn.flashcard_game.models.Flashcard;
 
 import com.ccvn.flashcard_game.retrofit.APIUtils;
@@ -61,39 +63,23 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     GameAPIService gameAPIService;
     private int mGameId;
     GamePlayViewModel mGamePlayViewModel;
-
-    TextView mScore, mQuestionCount;
-    TextView mImageViewText;
-    TextView mQuestion;
-    ImageView mImageGameplay;
-    RadioGroup mRadioGroup;
-    RadioButton mAnswerOptionOne, mAnswerOptionTwo, mAnswerOptionThree;
-
-    Button mFinish;
-    ImageButton mNextCard;
-    Chronometer mChronometer;
     DecimalFormat f;
-
-    EditText mInputAnswer;
-    Button mSubmit;
-    Group group;
     boolean isRight;
-
     GestureDetectorCompat detector;
 
-
     private Flashcard mFlashcard;
-
     private int position =0;
     private int count = 1;
     private double score = 0;
     private long time;
     private int totalTime = 0;
 
+    private ActivityGamePlayBinding mActivityGamePlayBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_play);
+       mActivityGamePlayBinding = DataBindingUtil.setContentView(this, R.layout.activity_game_play);
 
         f = new DecimalFormat("##.##");
         gameAPIService = APIUtils.getAPIService();
@@ -102,15 +88,8 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
         getUrlForNextFlashcard(position);
 
-        initview();
+        setViewVisible();
 
-        mImageViewText.setVisibility(View.INVISIBLE);
-        mImageGameplay.setVisibility(View.INVISIBLE);
-        mQuestion.setVisibility(View.INVISIBLE);
-        mRadioGroup.setVisibility(View.INVISIBLE);
-       group.setVisibility(View.INVISIBLE);
-        mNextCard.setVisibility(View.INVISIBLE);
-        mFinish.setVisibility(View.INVISIBLE);
         if (NetworkChangeReceiver.isOnline(getBaseContext())) {
             showFlashcard();
         }else {
@@ -119,22 +98,15 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         detector = new GestureDetectorCompat(this, this);
     }
 
-    private void initview() {
-        group = findViewById(R.id.group);
-        mQuestionCount = findViewById(R.id.tv_count_question);
-        mScore = findViewById(R.id.tv_score);
-        mImageGameplay = findViewById(R.id.imageView);
-        mRadioGroup = findViewById(R.id.radio_group);
-        mAnswerOptionOne = findViewById(R.id.radio_button_one);
-        mAnswerOptionTwo = findViewById(R.id.radio_button_two);
-        mAnswerOptionThree = findViewById(R.id.radio_button_three);
-        mImageViewText = findViewById(R.id.ImageViewText);
-        mQuestion = findViewById(R.id.tv_question);
-        mChronometer = findViewById(R.id.time);
-        mNextCard = findViewById(R.id.btn_next_card);
-        mFinish = findViewById(R.id.btn_finish);
-        mInputAnswer = findViewById(R.id.inputAnswer);
-        mSubmit = findViewById(R.id.btn_Submit);
+    private void setViewVisible() {
+
+        mActivityGamePlayBinding.ImageViewText.setVisibility(View.INVISIBLE);
+        mActivityGamePlayBinding.imageGameplay.setVisibility(View.INVISIBLE);
+        mActivityGamePlayBinding.tvQuestion.setVisibility(View.INVISIBLE);
+        mActivityGamePlayBinding.radioGroup.setVisibility(View.INVISIBLE);
+        mActivityGamePlayBinding.group.setVisibility(View.INVISIBLE);
+        mActivityGamePlayBinding.btnNextCard.setVisibility(View.INVISIBLE);
+        mActivityGamePlayBinding.btnFinish.setVisibility(View.INVISIBLE);
 
     }
 
@@ -149,60 +121,64 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     //Set url for next flashcard
     private void getUrlForNextFlashcard(int pos){
+
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
         String flashcradId = String.valueOf(mFlashcardId.get(pos));
         String url = APIUtils.URL_FLASHCARD + flashcradId;
-        mGamePlayViewModel.getNextFlashcard(flashcradId);
+        mGamePlayViewModel.getNextFlashcard(url);
 
     }
 
     //Show flashcard
     public void showFlashcard(){
+
+            mGamePlayViewModel.show(this);
+
                 mGamePlayViewModel.getAllFlashcard().observe(GamePlayActivity.this, new Observer<Flashcard>() {
                     @Override
                     public void onChanged(final Flashcard flashcard) {
 
-                        mScore.setText(getString(R.string.score) + f.format(score));
-                        mQuestionCount.setText(count + "/" + mFlashcardId.size());
+                        mActivityGamePlayBinding.tvScore.setText(getString(R.string.score) + f.format(score));
+                        mActivityGamePlayBinding.tvCountQuestion.setText(count + "/" + mFlashcardId.size());
 
                         if (flashcard.getWord() == null) {
 
-                            mImageViewText.setVisibility(View.INVISIBLE);
-                            mQuestion.setVisibility(View.INVISIBLE);
-                            mImageGameplay.setVisibility(View.VISIBLE);
+                            mActivityGamePlayBinding.ImageViewText.setVisibility(View.INVISIBLE);
+                            mActivityGamePlayBinding.tvQuestion.setVisibility(View.INVISIBLE);
+                            mActivityGamePlayBinding.imageGameplay.setVisibility(View.VISIBLE);
 
-                            Glide.with(GamePlayActivity.this).load(flashcard.getUpload_path()).into(mImageGameplay);
+                            Glide.with(GamePlayActivity.this).load(flashcard.getUpload_path()).into(mActivityGamePlayBinding.imageGameplay);
                         }
 
                         if (flashcard.getUpload_path() == null) {
 
-                            mImageGameplay.setVisibility(View.INVISIBLE);
-                            mQuestion.setVisibility(View.INVISIBLE);
-                            mImageViewText.setVisibility(View.VISIBLE);
+                            mActivityGamePlayBinding.imageGameplay.setVisibility(View.INVISIBLE);
+                            mActivityGamePlayBinding.tvQuestion.setVisibility(View.INVISIBLE);
+                            mActivityGamePlayBinding.ImageViewText.setVisibility(View.VISIBLE);
 
-                            mImageViewText.setText(flashcard.getWord());
+                            mActivityGamePlayBinding.ImageViewText.setText(flashcard.getWord());
                         }
 
                         if (flashcard.getWord() != null && flashcard.getWord() != null) {
 
-                            mImageGameplay.setVisibility(View.VISIBLE);
-                            mQuestion.setVisibility(View.VISIBLE);
-                            mImageViewText.setVisibility(View.INVISIBLE);
+                            mActivityGamePlayBinding.imageGameplay.setVisibility(View.VISIBLE);
+                            mActivityGamePlayBinding.tvQuestion.setVisibility(View.INVISIBLE);
+                            mActivityGamePlayBinding.ImageViewText.setVisibility(View.INVISIBLE);
 
-                            mQuestion.setText(flashcard.getWord() + "?");
-                            Glide.with(GamePlayActivity.this).load(flashcard.getUpload_path()).into(mImageGameplay);
+                            mActivityGamePlayBinding.tvQuestion.setText(flashcard.getWord() + "?");
+                            Glide.with(GamePlayActivity.this).load(flashcard.getUpload_path()).into(mActivityGamePlayBinding.imageGameplay);
                         }
 
                         if (flashcard.getType_id() == RADIO_BOX) {
 
                             for (int i = 0; i < 3; i++){
-                                ((RadioButton)mRadioGroup.getChildAt(i)).setText(flashcard.getValue().get(i));
+                                ((RadioButton)mActivityGamePlayBinding.radioGroup.getChildAt(i)).setText(flashcard.getValue().get(i));
                             }
 
-                            mRadioGroup.setVisibility(View.VISIBLE);
-                            group.setVisibility(View.INVISIBLE);
+                            mActivityGamePlayBinding.radioGroup.setVisibility(View.VISIBLE);
+                            mActivityGamePlayBinding.group.setVisibility(View.INVISIBLE);
 
-                            mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                            mActivityGamePlayBinding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                                     switch (checkedId) {
@@ -218,15 +194,15 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                         }
                         if (flashcard.getType_id() == INPUT_TEXT) {
 
-                            mRadioGroup.setVisibility(View.INVISIBLE);
-                            group.setVisibility(View.VISIBLE);
+                            mActivityGamePlayBinding.radioGroup.setVisibility(View.INVISIBLE);
+                            mActivityGamePlayBinding.group.setVisibility(View.VISIBLE);
 
-                            mSubmit.setOnClickListener(new View.OnClickListener() {
+                            mActivityGamePlayBinding.btnSubmit.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (mInputAnswer.getText().length() == 0) {
+                                    if (mActivityGamePlayBinding.inputAnswer.getText().length() == 0) {
 
-                                        mInputAnswer.setError("Please input your answer");
+                                        mActivityGamePlayBinding.inputAnswer.setError("Please input your answer");
                                     } else {
                                         getRightAnswerInputText(flashcard);
                                     }
@@ -235,22 +211,23 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                         }
                         mFlashcard = flashcard;
                         if (position == 0) {
-                            mChronometer.setBase(SystemClock.elapsedRealtime());
-                            mChronometer.start();
+                            mActivityGamePlayBinding.time.setBase(SystemClock.elapsedRealtime());
+                            mActivityGamePlayBinding.time.start();
                         }
                     }
                 });
+                mGamePlayViewModel.getDialog().dismiss();
     }
 
     public void getRightAnswer(){
 
-        if (mAnswerOptionOne.isChecked()){
+        if (mActivityGamePlayBinding.radioButtonOne.isChecked()){
             setAnswer();
         }
-        if (mAnswerOptionTwo.isChecked()){
+        if (mActivityGamePlayBinding.radioButtonTwo.isChecked()){
             setAnswer();
         }
-        if (mAnswerOptionThree.isChecked()){
+        if (mActivityGamePlayBinding.radioButtonThree.isChecked()){
             setAnswer();
         }
     }
@@ -260,35 +237,38 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
         for (int i = 0; i < 3; i++){
 
-            isRight =  ((RadioButton)mRadioGroup.getChildAt(i)).getText().toString().equals(mFlashcard.getRight_answer());
-            if (isRight && mRadioGroup.getChildAt(i).getId() == mRadioGroup.getCheckedRadioButtonId()){
-                mRadioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.right_answer));
-                mRadioGroup.getChildAt(i).setClickable(false);
-                ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.WHITE);
+            isRight =  ((RadioButton)mActivityGamePlayBinding.radioGroup.getChildAt(i)).getText().toString().equals(mFlashcard.getRight_answer());
+
+            if (isRight && mActivityGamePlayBinding.radioGroup.getChildAt(i).getId() == mActivityGamePlayBinding.radioGroup.getCheckedRadioButtonId()){
+
+                mActivityGamePlayBinding.radioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.right_answer));
+                mActivityGamePlayBinding.radioGroup.getChildAt(i).setClickable(false);
+                ((RadioButton)mActivityGamePlayBinding.radioGroup.getChildAt(i)).setTextColor(Color.WHITE);
 
                 setScore();
                 getTotalTime();
             }
-            else if (!isRight && mRadioGroup.getChildAt(i).getId() == mRadioGroup.getCheckedRadioButtonId()){
-                mRadioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.wrong_answer));
-                mRadioGroup.getChildAt(i).setClickable(false);
-                ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.WHITE);
+            else if (!isRight && mActivityGamePlayBinding.radioGroup.getChildAt(i).getId() == mActivityGamePlayBinding.radioGroup.getCheckedRadioButtonId()){
+                mActivityGamePlayBinding.radioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.wrong_answer));
+                mActivityGamePlayBinding.radioGroup.getChildAt(i).setClickable(false);
+                ((RadioButton)mActivityGamePlayBinding.radioGroup.getChildAt(i)).setTextColor(Color.WHITE);
 
                 getTotalTime();
             }
             else {
-                ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(Color.GRAY);
-                mRadioGroup.getChildAt(i).setClickable(false);
+                ((RadioButton)mActivityGamePlayBinding.radioGroup.getChildAt(i)).setTextColor(Color.GRAY);
+                mActivityGamePlayBinding.radioGroup.getChildAt(i).setClickable(false);
             }
         }
-        mNextCard.setVisibility(View.VISIBLE);
+        mActivityGamePlayBinding.btnNextCard.setVisibility(View.VISIBLE);
     }
 
     //click next flashcard button
     public void nextCard(View view) {
         if (NetworkChangeReceiver.isOnline(getBaseContext())) {
+
             position++;
-            mNextCard.setVisibility(View.INVISIBLE);
+            mActivityGamePlayBinding.btnNextCard.setVisibility(View.INVISIBLE);
 
             if (position <= mFlashcardId.size() - 1) {
                 count++;
@@ -298,12 +278,12 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                 setAnswerOptionDefault();
                 setInputAnserDefault();
                 showFlashcard();
-                mChronometer.setBase(SystemClock.elapsedRealtime());
-                mChronometer.start();
+                mActivityGamePlayBinding.time.setBase(SystemClock.elapsedRealtime());
+                mActivityGamePlayBinding.time.start();
 
                 if (position == mFlashcardId.size() - 1) {
-                    mFinish.setVisibility(View.VISIBLE);
-                    mFinish.setText("Finish");
+                    mActivityGamePlayBinding.btnFinish.setVisibility(View.VISIBLE);
+                    mActivityGamePlayBinding.btnFinish.setText("Finish");
                 }
             } else {
                 insertScore();
@@ -318,22 +298,22 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     private void setAnswerOptionDefault(){
         for (int i = 0; i < 3; i++){
 
-            mRadioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.radio_flat_selector));
-            mRadioGroup.getChildAt(i).setClickable(true);
-            ((RadioButton)mRadioGroup.getChildAt(i)).setTextColor(getResources().getColor(R.color.color_on_background));
+            mActivityGamePlayBinding.radioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.radio_flat_selector));
+            mActivityGamePlayBinding.radioGroup.getChildAt(i).setClickable(true);
+            ((RadioButton)mActivityGamePlayBinding.radioGroup.getChildAt(i)).setTextColor(getResources().getColor(R.color.color_on_background));
 
         }
-        mRadioGroup.clearCheck();
+        mActivityGamePlayBinding.radioGroup.clearCheck();
 
     }
 
     // Set input text default
     private void setInputAnserDefault(){
 
-        mInputAnswer.setEnabled(true);
-        mInputAnswer.setText("");
-        mInputAnswer.setTextColor(ContextCompat.getColor(this, R.color.color_on_surface));
-        mSubmit.setEnabled(true);
+        mActivityGamePlayBinding.inputAnswer.setEnabled(true);
+        mActivityGamePlayBinding.inputAnswer.setText("");
+        mActivityGamePlayBinding.inputAnswer.setTextColor(ContextCompat.getColor(this, R.color.color_on_surface));
+        mActivityGamePlayBinding.btnSubmit.setEnabled(true);
 
     }
 
@@ -395,39 +375,39 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     // set score for each flashcard
     private void setScore() {
 
-        mChronometer.stop();
-        time = (SystemClock.elapsedRealtime() - mChronometer.getBase())/1000;
+        mActivityGamePlayBinding.time.stop();
+        time = (SystemClock.elapsedRealtime() - mActivityGamePlayBinding.time.getBase())/1000;
         score = score + Math.round((0.01 + Math.pow(0.99, time)) * 100.0)/100.0;
-        mScore.setText(getString(R.string.score) + f.format(score));
+        mActivityGamePlayBinding.tvScore.setText(getString(R.string.score) + f.format(score));
     }
 
     // get total time play game
     private void getTotalTime(){
-        mChronometer.stop();
-        time = ((SystemClock.elapsedRealtime() - mChronometer.getBase())/1000);
+        mActivityGamePlayBinding.time.stop();
+        time = ((SystemClock.elapsedRealtime() - mActivityGamePlayBinding.time.getBase())/1000);
         totalTime = (int) (totalTime + time);
     }
 
     public void getRightAnswerInputText(Flashcard flashcard){
 
-        String answer = mInputAnswer.getText().toString();
+        String answer = mActivityGamePlayBinding.inputAnswer.getText().toString();
 
         if (flashcard.getRight_answer().equals(answer)){
 
-            mInputAnswer.setTextColor(ContextCompat.getColor(this, R.color.rightColorText));
-            mInputAnswer.setEnabled(false);
-            mSubmit.setEnabled(false);
-            mNextCard.setVisibility(View.VISIBLE);
+            mActivityGamePlayBinding.inputAnswer.setTextColor(ContextCompat.getColor(this, R.color.rightColorText));
+            mActivityGamePlayBinding.inputAnswer.setEnabled(false);
+            mActivityGamePlayBinding.btnSubmit.setEnabled(false);
+            mActivityGamePlayBinding.btnNextCard.setVisibility(View.VISIBLE);
 
            setScore();
            getTotalTime();
 
         }else {
 
-            mInputAnswer.setTextColor(ContextCompat.getColor(this, R.color.color_error));
-            mInputAnswer.setEnabled(false);
-            mSubmit.setEnabled(false);
-            mNextCard.setVisibility(View.VISIBLE);
+            mActivityGamePlayBinding.inputAnswer.setTextColor(ContextCompat.getColor(this, R.color.color_error));
+            mActivityGamePlayBinding.inputAnswer.setEnabled(false);
+            mActivityGamePlayBinding.btnSubmit.setEnabled(false);
+            mActivityGamePlayBinding.btnNextCard.setVisibility(View.VISIBLE);
 
             getTotalTime();
         }
@@ -478,10 +458,12 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     private void onSwipeLeft() {
 
-        if (mAnswerOptionOne.isChecked() || mAnswerOptionTwo.isChecked() || mAnswerOptionThree.isChecked()
-                || !mSubmit.isEnabled()){
+        if (mActivityGamePlayBinding.radioButtonOne.isChecked() || mActivityGamePlayBinding.radioButtonTwo.isChecked()
+                || mActivityGamePlayBinding.radioButtonThree.isChecked()
+                || !mActivityGamePlayBinding.btnSubmit.isEnabled()){
+
             position++;
-            mNextCard.setVisibility(View.INVISIBLE);
+            mActivityGamePlayBinding.btnNextCard.setVisibility(View.INVISIBLE);
 
             if (position <= mFlashcardId.size() - 1) {
                 count++;
@@ -491,12 +473,12 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                 setAnswerOptionDefault();
                 setInputAnserDefault();
                 showFlashcard();
-                mChronometer.setBase(SystemClock.elapsedRealtime());
-                mChronometer.start();
+                mActivityGamePlayBinding.time.setBase(SystemClock.elapsedRealtime());
+                mActivityGamePlayBinding.time.start();
 
                 if (position == mFlashcardId.size() - 1) {
-                    mFinish.setVisibility(View.VISIBLE);
-                    mFinish.setText("Finish");
+                    mActivityGamePlayBinding.btnFinish.setVisibility(View.VISIBLE);
+                    mActivityGamePlayBinding.btnFinish.setText("Finish");
                 }
             } else {
                 insertScore();
