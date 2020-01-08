@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,12 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -28,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ccvn.flashcard_game.Common.CustomDialog;
 import com.ccvn.flashcard_game.Common.NetworkChangeReceiver;
+import com.ccvn.flashcard_game.databinding.FragmentHomeBinding;
 import com.ccvn.flashcard_game.models.Game;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.retrofit.APIUtils;
@@ -35,12 +39,9 @@ import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.Adapter.GameAdapter;
 import com.ccvn.flashcard_game.viewmodels.ListGameViewModel;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.disposables.CompositeDisposable;
 
 
 @SuppressWarnings("ALL")
@@ -56,12 +57,11 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     GameAPIService mGameAPIService;
     private CustomDialog mCustomDialog;
     private RecyclerView mGameList;
+
     private List<Game> mListGame;
     private ListGameViewModel mViewModel;
-
     String sex;
-
-    CompositeDisposable mCompositeDisposable= new CompositeDisposable();
+    private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -72,11 +72,10 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
       // Init CustomDialog class
         mCustomDialog = new CustomDialog();
 
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-        mGameList = (RecyclerView) root.findViewById(R.id.game_list);
+       binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
 
        checkConnection();
-        return root;
+        return binding.getRoot();
 
     }
 
@@ -101,10 +100,11 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
      // setup recyclerview and display.
     private void displayData(List<Game> gameList) {
 
-        mGameList.setHasFixedSize(true);
+        binding.gameList.setHasFixedSize(true);
         GameAdapter adapter= new GameAdapter(getContext(), gameList, this);
-        mGameList.setAdapter(adapter);
-        runLayoutAnimation(mGameList);
+        binding.gameList.setAdapter(adapter);
+        runLayoutAnimation(binding.gameList);
+        Log.d("XX", String.valueOf(gameList.size()));
 
     }
     // load animation for item.
@@ -136,7 +136,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     }
 
     // show form to input player's information
-    private void infoDialog(){
+    private void showInfoDialog(){
 
         LayoutInflater inflater = getLayoutInflater();
         final View view = inflater.inflate(R.layout.info_form, null);
@@ -147,10 +147,10 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         dialog.setContentView(view);
         dialog.setCancelable(false);
 
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.copyFrom(dialog.getWindow().getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         final EditText mName = view.findViewById(R.id.edt_name);
         final EditText mAge = view.findViewById(R.id.edt_age);
@@ -195,7 +195,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         });
 
         dialog.show();
-        dialog.getWindow().setAttributes(lp);
+        dialog.getWindow().setAttributes(layoutParams);
 
     }
 
@@ -209,7 +209,7 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
         if (name.equals("") && sex.equals("") && age == 0){
 
-            infoDialog();
+            showInfoDialog();
 
         }else {
 

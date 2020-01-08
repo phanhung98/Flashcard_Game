@@ -29,7 +29,7 @@
     <!-- Toast string -->
     <string name="check_connection">Please check your connection!</string>
     <string name="button_play">Play Now</string>
-    <string name="score">x</string>
+    <string name="score">Score: </string>
 
     <!-- Score dialog -->
     <string name="title">Congratulation!</string>
@@ -48,5 +48,6 @@
     <string name="submit">Submit</string>
     <string name="SAVE">SAVE</string>
     <string name="a11y_plant_item_image">Picture of Game</string>
+    <string name="please_wait">Please wait</string>
 
 </resources>

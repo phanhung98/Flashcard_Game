@@ -11,7 +11,6 @@ public class Game {
     private int flashcard_total;
     private List<Integer> flashcard_id = null;
 
-
     public int getId() {
         return id;
     }
