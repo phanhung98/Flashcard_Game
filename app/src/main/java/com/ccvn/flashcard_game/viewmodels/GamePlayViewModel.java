@@ -32,7 +32,7 @@ public class GamePlayViewModel extends AndroidViewModel {
     private MutableLiveData<String> mSuccess;
     private Dialog dialog;
 
-    CompositeDisposable compositeDisposable= new CompositeDisposable();
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public GamePlayViewModel(@NonNull Application application) {
         super(application);
@@ -60,7 +60,6 @@ public class GamePlayViewModel extends AndroidViewModel {
                         mFlashcard.setValue(flashcard);
                     }
                 }));
-
     }
     public void storeScore(int gameId, double score, int totalTime, String name, int age, String sex){
 

@@ -3,11 +3,12 @@ package com.ccvn.flashcard_game.views;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,7 +17,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
-
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,26 +24,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
-
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.Common.NetworkChangeReceiver;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.databinding.ActivityGamePlayBinding;
 import com.ccvn.flashcard_game.models.Flashcard;
-
 import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.GamePlayViewModel;
 import java.text.DecimalFormat;
-
 import java.util.List;
 
 import static com.ccvn.flashcard_game.views.ListGameFragment.AGE;
@@ -99,7 +95,6 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     }
 
     private void setViewVisible() {
-
         mActivityGamePlayBinding.ImageViewText.setVisibility(View.INVISIBLE);
         mActivityGamePlayBinding.imageGameplay.setVisibility(View.INVISIBLE);
         mActivityGamePlayBinding.tvQuestion.setVisibility(View.INVISIBLE);
@@ -286,7 +281,8 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                     mActivityGamePlayBinding.btnFinish.setText("Finish");
                 }
             } else {
-                insertScore();
+                scoreDialog();
+//                insertScore();
             }
         }else {
             Toast.makeText(this, R.string.check_connection, Toast.LENGTH_SHORT).show();
@@ -317,7 +313,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     }
 
-    //Insert score to database
+    //Insert score to databaseas
     private void insertScore() {
 
         if (Common.currentUser == null){
@@ -358,18 +354,22 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         alertDialog.setTitle("Congratulation!");
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
+       final AlertDialog dialog = alertDialog.create();
+       dialog.show();
 
        mScore.setText("Your score: " + f.format(score));
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent home = new Intent(GamePlayActivity.this, GameActivity.class);
-                startActivity(home);
+                dialog.dismiss();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.container, new HighScoreFragment());
+                fragmentTransaction.commit();
             }
         });
 
-        AlertDialog dialog = alertDialog.create();
-        dialog.show();
+
    }
 
     // set score for each flashcard
@@ -477,6 +477,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
                 mActivityGamePlayBinding.time.start();
 
                 if (position == mFlashcardId.size() - 1) {
+
                     mActivityGamePlayBinding.btnFinish.setVisibility(View.VISIBLE);
                     mActivityGamePlayBinding.btnFinish.setText("Finish");
                 }
