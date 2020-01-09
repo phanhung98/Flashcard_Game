@@ -42,10 +42,14 @@ import com.ccvn.flashcard_game.viewmodels.ListGameViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 @SuppressWarnings("ALL")
-public class ListGameFragment extends Fragment implements GameAdapter.OnGameListener {
+public class ListGameFragment extends Fragment implements GameAdapter.OnGameListener{
 
     public static final String GAME_ID = "GameID";
 
@@ -73,29 +77,29 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
         mCustomDialog = new CustomDialog();
 
        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
-
        checkConnection();
         return binding.getRoot();
 
     }
 
-    private void getListGame(){
+        private void getListGame(){
 
-        mCustomDialog.showProgressBarDialog(getContext(), "Please Wait...");
-        mViewModel = ViewModelProviders.of(this).get(ListGameViewModel.class);
-        mViewModel.getGame();
+            mCustomDialog.showProgressBarDialog(getContext(), "Please Wait...");
+            mViewModel = ViewModelProviders.of(this).get(ListGameViewModel.class);
 
-        mViewModel.getAllGame().observe(ListGameFragment.this, new Observer<List<Game>>() {
-            @Override
-            public void onChanged(List<Game> games) {
-                displayData(games);
-                mListGame = games;
+            mViewModel.getAllGame().observe(ListGameFragment.this, new Observer<List<Game>>() {
+                @Override
+                public void onChanged(List<Game> games) {
 
-                mCustomDialog.getProgressBarDialog().dismiss();
-            }
-        });
+            displayData(games);
+            mListGame = games;
 
-    }
+            mCustomDialog.getProgressBarDialog().dismiss();
+
+                }
+            });
+
+        }
 
      // setup recyclerview and display.
     private void displayData(List<Game> gameList) {

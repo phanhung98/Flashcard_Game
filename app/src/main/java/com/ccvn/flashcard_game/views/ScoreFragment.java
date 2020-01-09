@@ -1,5 +1,6 @@
 package com.ccvn.flashcard_game.views;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -20,6 +21,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 
 import com.ccvn.flashcard_game.R;
+import com.ccvn.flashcard_game.databinding.ScoreFragmentBinding;
 import com.ccvn.flashcard_game.models.Score;
 import com.ccvn.flashcard_game.viewmodels.Adapter.ScoreAdapter;
 import com.ccvn.flashcard_game.viewmodels.ScoreViewModel;
@@ -30,27 +32,17 @@ public class ScoreFragment extends Fragment {
 
 
     private ScoreViewModel mViewModel;
-    private RecyclerView mRecyclerview;
+    private ScoreFragmentBinding binding;
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.score_fragment, container, false);
 
-        addControl(root);
+        binding  = DataBindingUtil.inflate(inflater, R.layout.score_fragment, container, false);
 
-        return root;
+        return binding.getRoot();
     }
-
-    private void addControl(View view){
-
-        mRecyclerview = view.findViewById(R.id.Scorerecycler);
-        mRecyclerview.setHasFixedSize(true);
-        mRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
-
-    }
-
 
     private void runLayoutAnimation(final RecyclerView recyclerView){
         final Context context= recyclerView.getContext();
@@ -74,8 +66,10 @@ public class ScoreFragment extends Fragment {
             public void onChanged(List<Score> scores) {
 
                 ScoreAdapter adapter = new ScoreAdapter(getContext(), scores);
-                mRecyclerview.setAdapter(adapter);
-                runLayoutAnimation(mRecyclerview);
+                binding.Scorerecycler.setAdapter(adapter);
+                binding.Scorerecycler.setHasFixedSize(true);
+                binding.Scorerecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+                runLayoutAnimation(binding.Scorerecycler);
 
             }
         });

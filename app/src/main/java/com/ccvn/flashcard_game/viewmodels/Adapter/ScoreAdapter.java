@@ -2,22 +2,23 @@ package com.ccvn.flashcard_game.viewmodels.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ccvn.flashcard_game.R;
+import com.ccvn.flashcard_game.databinding.HightsocreItemsBinding;
 import com.ccvn.flashcard_game.models.Score;
 
 import java.util.List;
 
-public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
+public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder>{
 
-    public static Context mContext;
-    public List<Score> mScoreList;
+    private Context mContext;
+    private List<Score> mScoreList;
 
     public ScoreAdapter(Context context, List<Score> mScoreList) {
         this.mScoreList = mScoreList;
@@ -28,17 +29,18 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
     @Override
     public ScoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.hightsocre_items, parent, false);
+        HightsocreItemsBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                R.layout.hightsocre_items, parent, false);
 
-        return new ScoreViewHolder(view);
+        return new ScoreViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ScoreViewHolder holder, int position) {
 
         Score currentScore = mScoreList.get(position);
-        holder.bindDataToView(currentScore);
-        holder.mRank.setText(String.valueOf(position+1));
+        holder.hightsocreItemsBinding.setScore(currentScore);
+        holder.hightsocreItemsBinding.tvRank.setText(String.valueOf(position+1));
 
     }
 
@@ -49,27 +51,13 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
 
     public class ScoreViewHolder extends RecyclerView.ViewHolder{
 
-        TextView mUserName, mHightScore, mRank, mGamename;
+        HightsocreItemsBinding hightsocreItemsBinding;
 
-    public ScoreViewHolder(@NonNull View itemView) {
-        super(itemView);
-
-        mUserName = itemView.findViewById(R.id.tv_userName);
-        mHightScore = itemView.findViewById(R.id.tv_score);
-        mRank = itemView.findViewById(R.id.tv_rank);
-        mGamename = itemView.findViewById(R.id.tv_gamename);
+    public ScoreViewHolder(@NonNull HightsocreItemsBinding hightsocreItemsBinding) {
+        super(hightsocreItemsBinding.getRoot());
+        this.hightsocreItemsBinding = hightsocreItemsBinding;
 
     }
-    // this is used for binding data to ViewHolder
-    public void bindDataToView(Score currentScore){
-
-        mUserName.setText(currentScore.getUserName());
-        mGamename.setText(currentScore.getGameName());
-        mHightScore.setText(String.valueOf(currentScore.getScore()));
-
-
-    }
-
 }
 
 }

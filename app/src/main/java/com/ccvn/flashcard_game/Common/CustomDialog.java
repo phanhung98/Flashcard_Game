@@ -1,5 +1,6 @@
 package com.ccvn.flashcard_game.Common;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,8 +14,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.views.GameActivity;
+import com.ccvn.flashcard_game.views.HighScoreFragment;
+
 import java.text.DecimalFormat;
 
 public class CustomDialog {
@@ -67,8 +74,12 @@ public class CustomDialog {
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent home = new Intent(context, GameActivity.class);
-                context.startActivity(home);
+                dialog.dismiss();
+                FragmentManager fragmentManager =((AppCompatActivity)context).getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container, new HighScoreFragment());
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
         dialog = new Dialog(context);

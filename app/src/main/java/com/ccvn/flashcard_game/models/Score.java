@@ -4,7 +4,8 @@ public class Score {
 
     private String userName;
     private String gameName;
-    private int score;
+    private double score;
+    private int rank;
 
     public String getUserName() {
         return userName;
@@ -22,11 +23,19 @@ public class Score {
         this.gameName = gameName;
     }
 
-    public int getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 }

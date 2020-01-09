@@ -1,24 +1,19 @@
 package com.ccvn.flashcard_game.views;
 
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.view.View;
 import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.Common.CustomDialog;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.databinding.ActivityGameDetailBinding;
 import com.ccvn.flashcard_game.models.Game;
-
 import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.viewmodels.GameDetailViewModel;
 import java.util.ArrayList;
@@ -35,16 +30,13 @@ public class GameDetailActivity extends AppCompatActivity {
     private CustomDialog customDialog;
     private ActivityGameDetailBinding binding;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_game_detail);
         mListFlashcardId = new ArrayList<>();
         customDialog = new CustomDialog();
-
-            mGameDetailViewModel = ViewModelProviders.of(this).get(GameDetailViewModel.class);
-
+        mGameDetailViewModel = ViewModelProviders.of(this).get(GameDetailViewModel.class);
         getGameId();
         customDialog.showProgressBarDialog(this);
         showGameDetail();
@@ -54,7 +46,7 @@ public class GameDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getIntExtra(ListGameFragment.GAME_ID, 0);
-        mGameDetailViewModel.getGameDetail(String.valueOf(id));
+        mGameDetailViewModel.getGameDetail(APIUtils.URL_GAME_LIST + id);
     }
     private void showGameDetail() {
 
@@ -72,14 +64,10 @@ public class GameDetailActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void show_game_play(View view) {
-        Intent intent = new Intent(GameDetailActivity.this, GamePlayActivity.class);
 
+        Intent intent = new Intent(GameDetailActivity.this, GamePlayActivity.class);
         intent.putIntegerArrayListExtra(FLASHCARD_ID, (ArrayList<Integer>) mListFlashcardId);
         intent.putExtra(GAMEID, id);
-
-        View share_image = findViewById(R.id.image_detail);
-        ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(this,
-                share_image, "image");
-        startActivity(intent, activityOptions.toBundle());
+        startActivity(intent);
     }
 }

@@ -51,5 +51,16 @@ public class ScoreViewModel extends AndroidViewModel {
 
     }
 
+    public void getHighScoreEachGame(){
+        compositeDisposable.add(mGameApoService.getHighScoreEachGame()
+                            .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<List<Score>>() {
+                        @Override
+                        public void accept(List<Score> scores) throws Exception {
+                            mHighScore.setValue(scores);
+                        }
+                    }));
+    }
 
 }

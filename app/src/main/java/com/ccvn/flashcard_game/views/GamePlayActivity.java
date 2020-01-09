@@ -60,7 +60,6 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     GestureDetectorCompat detector;
     Animation animSlideDown;
     private Flashcard mFlashcard;
-    GameAPIService mGameAPIService;
 
     private int position = 0;
     private int count = 1;
@@ -80,6 +79,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
         f = new DecimalFormat("##.##");
         gameAPIService = APIUtils.getAPIService();
+        detector = new GestureDetectorCompat(this, this);
         getId();
         setViewVisible();
         if (NetworkChangeReceiver.isOnline(getBaseContext())) {
@@ -155,12 +155,11 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     }
 
     public void showGamePlay(){
-
         CompositeDisposable compositeDisposable = new CompositeDisposable();
-        mGameAPIService = APIUtils.getAPIService();
         mActivityGamePlayBinding.tvScore.setText(getString(R.string.score) + f.format(score));
         mActivityGamePlayBinding.tvCountQuestion.setText(count + "/" + mFlashcardId.size());
-        compositeDisposable.add(mGameAPIService.getFlashcard(flashcradId)
+
+        compositeDisposable.add(gameAPIService.getFlashcard(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Flashcard>() {
@@ -192,7 +191,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     private void showRadioBox(int mRadioBox, final Flashcard flashcard){
         if (isRadioBox(mRadioBox)){
-
+            mActivityGamePlayBinding.btnSubmit.setEnabled(true);
             for (int i = 0; i < 3; i++){
                 ((RadioButton)mActivityGamePlayBinding.radioGroup.getChildAt(i)).setText(flashcard.getValue().get(i));
             }
@@ -412,7 +411,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mActivityGamePlayBinding.btnSubmit.setEnabled(true);
     }
 
-    //Insert score to database
+    //Insert score to databaseas
     private void insertScore() {
 
         if (Common.currentUser == null){
@@ -422,23 +421,18 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
             String sex = preferences.getString(SEX, "");
             int gameId = Common.currentGame.getId();
 
-            mGamePlayViewModel.storeScore(gameId, score, totalTime, name, age, sex);
-            storeScore();
-        }
-    }
-
-    public void storeScore(){
-
-        mGamePlayViewModel.getmSuccess().observe(GamePlayActivity.this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
+            mGamePlayViewModel.getmSuccess(gameId, score, totalTime, name, age, sex).observe(GamePlayActivity.this, new Observer<String>() {
+                @Override
+                public void onChanged(String s) {
                     if (s.equals("success")){
                         showScoreDialog();
                     }else {
                         Toast.makeText(GamePlayActivity.this, "Error", Toast.LENGTH_SHORT).show();
                     }
-            }
-        });
+                }
+            });
+
+        }
     }
 
     //Show score
@@ -547,7 +541,6 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     private void onSwipeLeft() {
 
         if (isCheckedRadioButton()){
-
            showNextFlashcard();
         }
     }
@@ -560,13 +553,8 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        detector = new GestureDetectorCompat(this, this);
         detector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
-    @Override
-    public void onBackPressed() {
-
-    }
 }

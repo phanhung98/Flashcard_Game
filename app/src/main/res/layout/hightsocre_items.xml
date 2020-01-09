@@ -1,54 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    app:cardElevation="5dp"
-    android:layout_width="match_parent"
-    android:layout_height="70dp">
+    >
 
-<LinearLayout
-    android:weightSum="7"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    <data>
+            <variable
+                name="score"
+                type="com.ccvn.flashcard_game.models.Score" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <LinearLayout
+            android:weightSum="7"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_rank"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#08B9CE"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+               />
+
+            <TextView
+                android:layout_weight="1.4"
+                android:id="@+id/tv_score"
+                android:padding="5dp"
+                android:text="@{String.valueOf(score.score)}"
+                android:textAlignment="center"
+                android:gravity="center_vertical"
+                android:layout_gravity="start"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:layout_weight="2"
+                android:id="@+id/tv_gamename"
+                android:text="@{score.gameName}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:layout_weight="2.6"
+                android:id="@+id/tv_userName"
+                android:text="@{score.userName}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 
-    <TextView
-        android:id="@+id/tv_rank"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="#08B9CE"
-        android:textAlignment="center"
-        android:gravity="center_vertical"
-        android:textSize="17sp" />
-
-    <TextView
-
-        android:layout_weight="1.4"
-        android:id="@+id/tv_score"
-        android:textSize="17sp"
-        android:padding="5dp"
-        android:textAlignment="center"
-        android:gravity="center_vertical"
-        android:layout_gravity="start"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"/>
-
-    <TextView
-
-        android:layout_weight="2"
-        android:id="@+id/tv_gamename"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"/>
-
-    <TextView
-        android:layout_weight="2.6"
-        android:id="@+id/tv_userName"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"/>
-
-
-</LinearLayout>
-
-</androidx.cardview.widget.CardView>
+</layout>

@@ -27,6 +27,9 @@ public interface GameAPIService {
     @GET(APIUtils.URL_HIGHSCORE)
     Observable<List<Score>> getHighScore();
 
+    @GET(APIUtils.URL_SCORE)
+    Observable<List<Score>> getHighScoreEachGame();
+
     @POST(APIUtils.URL_SCORE)
     @FormUrlEncoded
     Observable<String> insertScore(@Field("game_id") int mGameId,
