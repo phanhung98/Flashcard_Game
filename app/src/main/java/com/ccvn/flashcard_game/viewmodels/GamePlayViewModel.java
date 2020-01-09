@@ -37,7 +37,6 @@ public class GamePlayViewModel extends AndroidViewModel {
     public MutableLiveData<String> getmSuccess(int gameId, double score, int totalTime, String name, int age, String sex){
         if (mSuccess == null){
             mSuccess = new MutableLiveData<>();
-            storeScore(gameId, score, totalTime, name, age, sex);
         }
         return mSuccess;
     }

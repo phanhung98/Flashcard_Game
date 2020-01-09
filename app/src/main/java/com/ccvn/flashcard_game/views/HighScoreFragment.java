@@ -25,9 +25,11 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
+import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.databinding.HighscoreFragmentBinding;
 import com.ccvn.flashcard_game.models.Score;
+import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.viewmodels.Adapter.HighScoreAdapter;
 import com.ccvn.flashcard_game.viewmodels.ScoreViewModel;
 
@@ -89,8 +91,9 @@ public class HighScoreFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         mViewModel = ViewModelProviders.of(this).get(ScoreViewModel.class);
-        mViewModel.getHighScoreEachGame();
+        mViewModel.getHighScoreEachGame(APIUtils.URL_GAMEHIGHSCORE + Common.currentGame.getId());
 
         mViewModel.getAllHighScore().observe(HighScoreFragment.this, new Observer<List<Score>>() {
             @Override

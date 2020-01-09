@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -34,8 +33,11 @@ import com.ccvn.flashcard_game.retrofit.GameAPIService;
 import com.ccvn.flashcard_game.viewmodels.GamePlayViewModel;
 import java.text.DecimalFormat;
 import java.util.List;
+
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import static com.ccvn.flashcard_game.views.ListGameFragment.AGE;
@@ -113,8 +115,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     }
 
     public void finishGame(View view){
-//        insertScore();
-        showScoreDialog();
+        insertScore();
     }
 
     public boolean countToLastFlashcard(List<Integer> mFlashcardId){
@@ -414,25 +415,43 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     //Insert score to databaseas
     private void insertScore() {
 
-        if (Common.currentUser == null){
             SharedPreferences preferences = getSharedPreferences(USERINFO, Context.MODE_PRIVATE);
             String name = preferences.getString(NAME, "");
             int age = preferences.getInt(AGE, 0);
             String sex = preferences.getString(SEX, "");
             int gameId = Common.currentGame.getId();
 
-            mGamePlayViewModel.getmSuccess(gameId, score, totalTime, name, age, sex).observe(GamePlayActivity.this, new Observer<String>() {
-                @Override
-                public void onChanged(String s) {
-                    if (s.equals("success")){
-                        showScoreDialog();
-                    }else {
-                        Toast.makeText(GamePlayActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+            gameAPIService.insertScore(gameId, score, totalTime, name, age, sex).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-        }
+                        }
+
+                        @Override
+                        public void onNext(String success) {
+                            if (isStoreScoreSuccess(success)){
+                                showScoreDialog();
+                            }else {
+                                Toast.makeText(GamePlayActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+    }
+
+    private boolean isStoreScoreSuccess(String success){
+        return success.equals("success");
     }
 
     //Show score
