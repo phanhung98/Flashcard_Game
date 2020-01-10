@@ -38,6 +38,7 @@ public class ScoreFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         binding  = DataBindingUtil.inflate(inflater, R.layout.score_fragment, container, false);
 
         return binding.getRoot();

@@ -62,7 +62,6 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="24dp"
-                android:text="score"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 app:layout_constraintStart_toStartOf="@id/guideline6"
                 app:layout_constraintTop_toTopOf="@+id/guideline" />
@@ -74,7 +73,6 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
-                android:text="1/12"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 app:layout_constraintEnd_toEndOf="@id/guideline7"
                 app:layout_constraintTop_toTopOf="@id/guideline" />
@@ -244,7 +242,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/next"
-                android:onClick="nextCard"
+                android:onClick="finishGame"
                 android:text="@string/nextcard_button"
                 app:layout_constraintBottom_toBottomOf="@id/guideline5"
                 app:layout_constraintEnd_toEndOf="@id/guideline7"
@@ -261,7 +259,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>
-
 
 </layout>
 

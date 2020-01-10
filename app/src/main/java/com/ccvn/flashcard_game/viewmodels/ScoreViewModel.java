@@ -51,8 +51,8 @@ public class ScoreViewModel extends AndroidViewModel {
 
     }
 
-    public void getHighScoreEachGame(){
-        compositeDisposable.add(mGameApoService.getHighScoreEachGame()
+    public void getHighScoreEachGame(String url){
+        compositeDisposable.add(mGameApoService.getHighScoreEachGame(url)
                             .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<List<Score>>() {

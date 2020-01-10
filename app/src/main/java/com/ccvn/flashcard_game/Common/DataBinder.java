@@ -12,7 +12,7 @@ public final class DataBinder {
     @BindingAdapter("upload_path")
     public static void setUploadPath(ImageView imageView, String url){
         Context context = imageView.getContext();
-        Glide.with(context).load(url).into(imageView);
+        Glide.with(context).load(url).centerCrop().into(imageView);
     }
 
 }

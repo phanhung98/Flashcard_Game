@@ -29,6 +29,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ccvn.flashcard_game.Common.CustomDialog;
 import com.ccvn.flashcard_game.Common.NetworkChangeReceiver;
 import com.ccvn.flashcard_game.databinding.FragmentHomeBinding;
 import com.ccvn.flashcard_game.models.Game;
@@ -41,10 +42,14 @@ import com.ccvn.flashcard_game.viewmodels.ListGameViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 @SuppressWarnings("ALL")
-public class ListGameFragment extends Fragment implements GameAdapter.OnGameListener {
+public class ListGameFragment extends Fragment implements GameAdapter.OnGameListener{
 
     public static final String GAME_ID = "GameID";
 
@@ -54,6 +59,9 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     public static final String SEX = "Sex";
 
     GameAPIService mGameAPIService;
+    private CustomDialog mCustomDialog;
+    private RecyclerView mGameList;
+
     private List<Game> mListGame;
     private ListGameViewModel mViewModel;
     String sex;
@@ -65,33 +73,37 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
 
       // Init GameAPIService class
         mGameAPIService = APIUtils.getAPIService();
+      // Init CustomDialog class
+        mCustomDialog = new CustomDialog();
 
        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
-
        checkConnection();
         return binding.getRoot();
 
     }
 
-    private void getListGame(){
+        private void getListGame(){
 
-        mViewModel = ViewModelProviders.of(this).get(ListGameViewModel.class);
-        mViewModel.getGame();
+            mCustomDialog.showProgressBarDialog(getContext(), "Please Wait...");
+            mViewModel = ViewModelProviders.of(this).get(ListGameViewModel.class);
 
-        mViewModel.getAllGame().observe(ListGameFragment.this, new Observer<List<Game>>() {
-            @Override
-            public void onChanged(List<Game> games) {
-                displayData(games);
-                mListGame = games;
-            }
-        });
+            mViewModel.getAllGame().observe(ListGameFragment.this, new Observer<List<Game>>() {
+                @Override
+                public void onChanged(List<Game> games) {
 
-    }
+            displayData(games);
+            mListGame = games;
+
+            mCustomDialog.getProgressBarDialog().dismiss();
+
+                }
+            });
+
+        }
 
      // setup recyclerview and display.
     private void displayData(List<Game> gameList) {
 
-        binding.progressBar.setVisibility(View.GONE);
         binding.gameList.setHasFixedSize(true);
         GameAdapter adapter= new GameAdapter(getContext(), gameList, this);
         binding.gameList.setAdapter(adapter);
@@ -120,7 +132,6 @@ public class ListGameFragment extends Fragment implements GameAdapter.OnGameList
     // check conection.
     public void checkConnection(){
         if (NetworkChangeReceiver.isOnline(getContext())){
-            binding.progressBar.setVisibility(View.VISIBLE);
            getListGame();
         }else {
 

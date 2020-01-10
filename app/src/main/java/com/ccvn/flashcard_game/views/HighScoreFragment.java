@@ -20,13 +20,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
+import com.ccvn.flashcard_game.Common.Common;
 import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.databinding.HighscoreFragmentBinding;
 import com.ccvn.flashcard_game.models.Score;
+import com.ccvn.flashcard_game.retrofit.APIUtils;
 import com.ccvn.flashcard_game.viewmodels.Adapter.HighScoreAdapter;
 import com.ccvn.flashcard_game.viewmodels.ScoreViewModel;
 
@@ -38,6 +41,7 @@ import java.util.List;
 public class HighScoreFragment extends Fragment {
     private ScoreViewModel mViewModel;
     private HighscoreFragmentBinding binding;
+    private Animation animation;
 
     public HighScoreFragment() {
         // Required empty public constructor
@@ -48,7 +52,13 @@ public class HighScoreFragment extends Fragment {
                              Bundle savedInstanceState) {
          binding = DataBindingUtil.inflate(inflater,R.layout.highscore_fragment, container, false);
             setupToolbar();
+            setAnimation();
         return binding.getRoot();
+    }
+
+    private void setAnimation(){
+        animation = AnimationUtils.loadAnimation(getActivity(), R.anim.item_animation_slide_from_right);
+        binding.container.startAnimation(animation);
     }
 
     private void setupToolbar(){
@@ -81,8 +91,9 @@ public class HighScoreFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         mViewModel = ViewModelProviders.of(this).get(ScoreViewModel.class);
-        mViewModel.getHighScoreEachGame();
+        mViewModel.getHighScoreEachGame(APIUtils.URL_GAMEHIGHSCORE + Common.currentGame.getId());
 
         mViewModel.getAllHighScore().observe(HighScoreFragment.this, new Observer<List<Score>>() {
             @Override
