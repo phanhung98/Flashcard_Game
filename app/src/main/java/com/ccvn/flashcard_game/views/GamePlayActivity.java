@@ -10,6 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.media.SoundPool.Builder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -62,6 +68,9 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     GestureDetectorCompat detector;
     Animation animSlideDown;
     private Flashcard mFlashcard;
+    SoundPool soundPool;
+    private AudioManager audioManager;
+    int correctSound, incorrectSound;
 
     private int position = 0;
     private int count = 1;
@@ -188,6 +197,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         showRadioBox(flashcard.getType_id(), flashcard);
         showInputText(flashcard.getType_id(), flashcard);
         setStartTime();
+        playSoundEffect();
     }
 
     private void showRadioBox(int mRadioBox, final Flashcard flashcard){
@@ -354,7 +364,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
             mActivityGamePlayBinding.radioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.right_answer));
             mActivityGamePlayBinding.radioGroup.getChildAt(i).setClickable(false);
             ((RadioButton)mActivityGamePlayBinding.radioGroup.getChildAt(i)).setTextColor(Color.WHITE);
-
+            playCorrectSound();
             setScore();
             getTotalTime();
 
@@ -364,7 +374,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mActivityGamePlayBinding.radioGroup.getChildAt(i).setBackground(getDrawable(R.drawable.wrong_answer));
         mActivityGamePlayBinding.radioGroup.getChildAt(i).setClickable(false);
         ((RadioButton)mActivityGamePlayBinding.radioGroup.getChildAt(i)).setTextColor(Color.WHITE);
-
+        playIncorrectSound();
         getTotalTime();
     }
 
@@ -479,6 +489,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mActivityGamePlayBinding.inputAnswer.setTextColor(ContextCompat.getColor(this, R.color.rightColorText));
         mActivityGamePlayBinding.inputAnswer.setEnabled(false);
         mActivityGamePlayBinding.btnSubmit.setEnabled(false);
+        playCorrectSound();
         setScore();
         getTotalTime();
     }
@@ -488,6 +499,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         mActivityGamePlayBinding.inputAnswer.setTextColor(ContextCompat.getColor(this, R.color.color_error));
         mActivityGamePlayBinding.inputAnswer.setEnabled(false);
         mActivityGamePlayBinding.btnSubmit.setEnabled(false);
+        playIncorrectSound();
         getTotalTime();
     }
 
@@ -576,4 +588,42 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         return super.onTouchEvent(event);
     }
 
+    private void playSoundEffect(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            soundPool = new SoundPool.Builder()
+                    .setMaxStreams(2)
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+        }else {
+            soundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
+        }
+
+    }
+
+    private void playCorrectSound(){
+        correctSound = soundPool.load(this, R.raw.correct, 1);
+        soundPool.play(correctSound, 1, 1, 0, 0, 1);
+        MediaPlayer mPlayer = MediaPlayer.create(this, R.raw.correct); // in 2nd param u have to pass your desire ringtone
+//mPlayer.prepare();
+        mPlayer.start();
+        Log.d("TTTT", "correct");
+    }
+    private void playIncorrectSound(){
+        incorrectSound = soundPool.load(this, R.raw.incorrect, 1);
+        soundPool.play(incorrectSound, 1, 1, 0, 0, 1);
+        MediaPlayer mPlayer = MediaPlayer.create(this, R.raw.incorrect); // in 2nd param u have to pass your desire ringtone
+//mPlayer.prepare();
+        mPlayer.start();
+        Log.d("TTTT", "incorrect");
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
