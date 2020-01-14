@@ -35,7 +35,9 @@ import com.ccvn.flashcard_game.R;
 import com.ccvn.flashcard_game.databinding.ActivityGamePlayBinding;
 import com.ccvn.flashcard_game.models.Flashcard;
 import com.ccvn.flashcard_game.retrofit.APIUtils;
+import com.ccvn.flashcard_game.retrofit.FlashcardRepository;
 import com.ccvn.flashcard_game.retrofit.GameAPIService;
+import com.ccvn.flashcard_game.retrofit.GetFlashcard;
 import com.ccvn.flashcard_game.viewmodels.GamePlayViewModel;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -51,7 +53,7 @@ import static com.ccvn.flashcard_game.views.ListGameFragment.NAME;
 import static com.ccvn.flashcard_game.views.ListGameFragment.SEX;
 import static com.ccvn.flashcard_game.views.ListGameFragment.USERINFO;
 
-public class GamePlayActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
+public class GamePlayActivity extends AppCompatActivity implements GestureDetector.OnGestureListener, GetFlashcard.View {
 
     private static final int RADIO_BOX = 1;
     private static final int INPUT_TEXT = 2;
@@ -62,7 +64,6 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     public List<Integer> mFlashcardId;
     GameAPIService gameAPIService;
     private int mGameId;
-    GamePlayViewModel mGamePlayViewModel;
     DecimalFormat f;
     boolean isRight;
     GestureDetectorCompat detector;
@@ -79,6 +80,7 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
     private int totalTime = 0;
     private String flashcradId;
     private String url;
+    FlashcardRepository flashcardRepository;
 
     private ActivityGamePlayBinding mActivityGamePlayBinding;
 
@@ -87,7 +89,9 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         super.onCreate(savedInstanceState);
        mActivityGamePlayBinding = DataBindingUtil.setContentView(this, R.layout.activity_game_play);
 
-        mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
+       initPresenter();
+
+//        mGamePlayViewModel = ViewModelProviders.of(this).get(GamePlayViewModel.class);
         f = new DecimalFormat("##.##");
         gameAPIService = APIUtils.getAPIService();
         detector = new GestureDetectorCompat(this, this);
@@ -98,6 +102,11 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         }else {
             Toast.makeText(this, R.string.check_connection, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void initPresenter() {
+        flashcardRepository = new FlashcardRepository();
+        flashcardRepository.setView(this);
     }
 
     public void nextCard(View view) {
@@ -164,22 +173,22 @@ public class GamePlayActivity extends AppCompatActivity implements GestureDetect
         url = APIUtils.URL_FLASHCARD + flashcradId;
     }
 
+
+    @Override
+    public void getCard(Flashcard flashcard) {
+        mFlashcard = flashcard;
+    }
+
     public void showGamePlay(){
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
         mActivityGamePlayBinding.tvScore.setText(getString(R.string.score) + f.format(score));
         mActivityGamePlayBinding.tvCountQuestion.setText(count + "/" + mFlashcardId.size());
 
-        compositeDisposable.add(gameAPIService.getFlashcard(url)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Flashcard>() {
-                    @Override
-                    public void accept(Flashcard flashcard) throws Exception {
-                        showFlashcard(flashcard);
-                        showAnswer(flashcard);
-                        mFlashcard = flashcard;
-                    }
-                }));
+        flashcardRepository.handleFlashcard(flashcradId);
+
+                Log.d("HHHH", "onChanged");
+                showFlashcard(mFlashcard);
+                showAnswer(mFlashcard);
+
     }
 
     private void setStartTime(){
